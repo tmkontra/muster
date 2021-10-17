@@ -53,10 +53,6 @@ defmodule MusterApi do
 
   def service do
     quote do
-      def with_repo_impl(repo, do: func) do
-
-      end
-
       def create_repo(repo) do
         # TODO: get repo state from db
         Muster.Registry.start_repo(repo)

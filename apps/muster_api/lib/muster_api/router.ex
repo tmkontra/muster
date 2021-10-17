@@ -11,6 +11,7 @@ defmodule MusterApi.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+
   end
 
   scope "/v2", MusterApi do
@@ -22,6 +23,8 @@ defmodule MusterApi.Router do
       get "/", RegistryController, :get_repo_index
 
       post "/blobs/uploads", RegistryController, :start_upload
+      put "/blobs/uploads/:location", RegistryController, :upload_blob
+      patch "/blobs/uploads/:location", RegistryController, :upload_blob_chunk
       put "/manifests/:reference", RegistryController, :upload_manifest
 
       get "/blobs/:digest", RegistryController, :get_blob

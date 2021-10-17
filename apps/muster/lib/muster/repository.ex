@@ -1,5 +1,6 @@
 defmodule Muster.Repository do
   use GenServer, restart: :temporary
+  require Logger
 
   def create([name, id]) do
     GenServer.start_link(__MODULE__, name, name: id)
@@ -126,10 +127,10 @@ defmodule Muster.Repository do
   end
 
   defp upload_layer_monolithic(upload_id, digest, blob, %{uploads: uploads, layers: layers} = state) do
-    with {:ok, {:started, nil}} <- Map.fetch(uploads, upload_id)
+    with {:ok, {:started, _any}} <- Map.fetch(uploads, upload_id)
       do
         layers = Map.put(layers, digest, blob)
-        uploads = Map.put(uploads, upload_id, {:completed, nil})
+        uploads = Map.put(uploads, upload_id, {:completed, []})
         state = %{state | layers: layers, uploads: uploads}
         {:ok, digest, state}
       else _err ->
@@ -156,7 +157,9 @@ defmodule Muster.Repository do
       [] when range_start == 0 -> [{range_end, blob}]
       chunks = [{prev_end, _blob} | _tail = []] when prev_end + 1 == range_start -> [{range_end, blob} | chunks]
       chunks = [{prev_end, blob} | _tail] when prev_end + 1 == range_start -> [{range_end, blob} | chunks]
-      _ -> :error
+      invalid ->
+        Logger.warn("Got invalid chunk sequence for range '#{range_start}-#{range_end}': #{invalid}")
+        :error
     end
     case chunks do
       :error -> {:error, :illegal_chunk_sequence}
