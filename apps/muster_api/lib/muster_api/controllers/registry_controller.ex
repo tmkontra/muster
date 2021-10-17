@@ -16,6 +16,13 @@ defmodule MusterApi.RegistryController do
     render_json(conn, body)
   end
 
+  def start_upload(conn, %{"namespace" => namespace, "name" => name} = params) do
+    conn |> send_resp(202, "")
+  end
+  def upload_manifest(conn, %{"namespace" => namespace, "name" => name, "reference" => reference} = params) do
+    conn |> send_resp(202, "")
+  end
+
   def get_blob(conn, %{"namespace" => namespace, "name" => name, "digest" => digest} = params) do
     Muster.Registry.start_repo(namespace <> name)
     case Muster.Registry.get_layer(namespace <> name, digest) do
@@ -24,6 +31,7 @@ defmodule MusterApi.RegistryController do
     end
   end
 
+  @spec blob_exists?(Plug.Conn.t(), map) :: Plug.Conn.t()
   def blob_exists?(conn, %{"namespace" => namespace, "name" => name, "digest" => digest} = params) do
     case Muster.Registry.blob_exists?(namespace <> name, digest) do
       false -> conn |> not_found
@@ -51,5 +59,9 @@ defmodule MusterApi.RegistryController do
 
   def not_found(conn) do
     conn |> send_resp(404, "")
+  end
+
+  def method_not_allowed(conn, _) do
+    conn |> send_resp(405, "")
   end
 end
