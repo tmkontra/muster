@@ -88,12 +88,30 @@ defmodule Muster.Repository do
     {:reply, tags, state}
   end
 
+  def handle_call({:check_manifest, reference}, _from, %{tags: tags} = state) do
+    exists? = Map.has_key?(tags, reference)
+    {:reply, exists?, state}
+  end
+
   def handle_call({:get_manifest, reference}, _from, %{tags: tags} = state) do
     manifest = case Map.get(tags, reference) do
       nil -> {:error, :not_found}
       manifest -> {:ok, manifest}
     end
     {:reply, manifest, state}
+  end
+
+  def handle_call({:check_layer, digest}, _from, %{layers: layers} = state) do
+    exists? = Map.has_key?(layers, digest)
+    {:reply, exists?, state}
+  end
+
+  def handle_call({:get_layer, digest}, _from, %{layers: layers} = state) do
+    resp = case Map.get(layers, digest) do
+      nil -> {:error, :not_found}
+      blob -> {:ok, blob}
+    end
+    {:reply, resp, state}
   end
 
   defp new_upload(%{uploads: %{} = uploads} = state, type) do

@@ -68,8 +68,36 @@ defmodule Muster.Registry do
     GenServer.call({:list_tags, {n, last}})
   end
 
+  def manifest_exists?(repo_name, reference) do
+    repo_name |> repo_via() |>
+    GenServer.call({:check_manifest, reference})
+  end
+
   def get_manifest(repo_name, reference) do
     repo_name |> repo_via() |>
     GenServer.call({:get_manifest, reference})
+  end
+
+  def layer_exists?(repo_name, digest) do
+    repo_name |> repo_via() |>
+    GenServer.call({:check_layer, digest})
+  end
+
+  def get_layer(repo_name, digest) do
+    repo_name |> repo_via() |>
+    GenServer.call({:get_layer, digest})
+  end
+
+  def delete_tag(repo_name, _reference) do
+    {:error, :unsupported}
+  end
+
+  def delete_manifest(repo_name, _reference) do
+    {:error, :unsupported}
+  end
+
+  @spec delete_layer(any, any) :: {:error, :unsupported}
+  def delete_layer(repo_name, _reference) do
+    {:error, :unsupported}
   end
 end
