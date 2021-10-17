@@ -21,6 +21,8 @@ defmodule Muster.Registry do
 
   def repo_via(name), do: {:via, Registry, {RepoPidRegistry, name}}
 
+  def running?(name), do: name |> repo_via() |> Process.alive?()
+
   def start_upload_monolithic(repo_name) do
     repo_name |> repo_via |>
     GenServer.call(:start_upload)

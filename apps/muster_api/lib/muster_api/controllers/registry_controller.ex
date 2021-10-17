@@ -24,14 +24,12 @@ defmodule MusterApi.RegistryController do
   end
 
   def get_blob(conn, %{"namespace" => namespace, "name" => name, "digest" => digest} = params) do
-    Muster.Registry.start_repo(namespace <> name)
-    case Muster.Registry.get_layer(namespace <> name, digest) do
+    case MusterApi.RegistryService.get_blob(namespace, name, digest) do
       {:error, :not_found} -> conn |> send_resp(404, "")
       {:ok, resp} -> render_json(conn, resp)
     end
   end
 
-  @spec blob_exists?(Plug.Conn.t(), map) :: Plug.Conn.t()
   def blob_exists?(conn, %{"namespace" => namespace, "name" => name, "digest" => digest} = params) do
     case Muster.Registry.blob_exists?(namespace <> name, digest) do
       false -> conn |> not_found
