@@ -13,6 +13,21 @@ defmodule MusterApi.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/v2", MusterApi do
+    pipe_through :api
+
+    get "/", RegistryController, :index
+
+    scope "/:namespace/:name" do
+      get "/", RegistryController, :get_repo_index
+      get "/blobs/:digest", RegistryController, :get_blob
+      head "/blobs/:digest", RegistryController, :blob_exists?
+      head "/manifests/:reference", RegistryController, :manifest_exists?
+      get "/manifests/:reference", RegistryController, :get_manifest
+      get "/*any_match", RegistryController, :default_route
+    end
+  end
+
   scope "/", MusterApi do
     pipe_through :browser
 

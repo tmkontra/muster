@@ -21,11 +21,6 @@ defmodule Muster.Registry do
 
   def repo_via(name), do: {:via, Registry, {RepoPidRegistry, name}}
 
-  def pull(repo_name) do
-    repo_name |> repo_via |>
-    GenServer.call(:message)
-  end
-
   def start_upload_monolithic(repo_name) do
     repo_name |> repo_via |>
     GenServer.call(:start_upload)

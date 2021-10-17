@@ -28,6 +28,8 @@ defmodule MusterApi.ConnCase do
 
       # The default endpoint for testing
       @endpoint MusterApi.Endpoint
+
+      def random_string(length), do: s = for _ <- 1..length, into: "", do: <<Enum.random('0123456789abcdef')>>
     end
   end
 
