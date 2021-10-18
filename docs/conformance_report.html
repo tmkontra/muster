@@ -1,0 +1,3486 @@
+<html>
+  <head>
+    <title>OCI Distribution Conformance Tests</title>
+    <style>
+      body {
+        padding: 10px 20px 10px 20px;
+        font-family: -apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+        background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAG0lEQVQYV2Pce7zwv7NlPyMDFMAZGAIwlRgqAFydCAVv5m4UAAAAAElFTkSuQmCC") repeat;
+         
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        background-color: white;
+      }
+      th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      tr:hover {
+        background-color: #ffe39b;
+      }
+      .result {
+        padding: 1.25em 0 .25em 0.8em;
+        border: 1px solid #e1e1e1;
+        border-radius: 5px;
+        margin-top: 10px;
+      }
+      .red {
+        background: #ffc8c8;
+      }
+      pre.fail-message {
+        background: #f9a5a5;
+        padding: 20px;
+        margin-right: 10px;
+        display: inline-block;
+        border-radius: 4px;
+        font-size: 1.25em;
+        width: 94%;
+        overflow-x: auto;
+        max-width: 85%;
+      }
+      .green {
+        background: #c8ffc8;
+        padding: 1.25em 0 1.25em 0.8em;
+      }
+      .grey {
+        background: lightgrey;
+        padding: 1.25em 0 1.25em 0.8em;
+      }
+      .toggle {
+        border: 2px solid #3e3e3e;
+        cursor: pointer;
+        width: 1em;
+        text-align: center;
+        font-weight: bold;
+        display: inline;
+        font-family: monospace;
+        padding: 0 .25em 0 .25em;
+        margin: 1em 1em 1em 0;
+        font-size: 12pt;
+        color: #3e3e3e;
+        border-radius: 3px;
+      }
+      pre.pre-box {
+        background: #343a40;
+        color: #fff;
+        padding: 10px;
+        border: 1px solid gray;
+        display: inline-block;
+        border-radius: 4px;
+        width: 97%;
+        font-size: 1.25em;
+        overflow-x: auto;
+        max-height: 60em;
+        overflow-y: auto;
+        max-width: 85%;
+      }
+      .summary {
+        width: 100%;
+        height: auto;
+        padding: 0 0 .5em 0;
+        border-radius: 6px;
+        border: 1px solid #cccddd;
+        background: white;
+      }
+      .summary-bullet {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-wrap: wrap;
+        padding: .5em .1em .1em .5em;
+      }
+      .bullet-left {
+        width: 25%;
+        font-weight: bold;
+        font-size: 100%;
+      }
+      .bullet-right {
+        width: auto;
+        font-family: monospace;
+        font-size: 110%;
+      }
+      .quick-summary {
+        width: 70%;
+        display: flex;
+        margin: 0 auto 0 0;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+      .darkgreen {
+        color: green;
+      }
+      .darkred {
+        color: red;
+        padding: 0 0 0 2em;
+      }
+      .darkgrey {
+        color: grey;
+        padding: 0 0 0 2em;
+      }
+      .meter {
+        border: 1px solid black;
+        margin: 0 .5em 0 auto;
+        display: flex;
+        height: 25px;
+        width: 45%;
+      }
+      @media only screen and (max-width: 600px) {
+        .meter {
+          display: none;
+        }
+      }
+      .meter-green {
+        height: 100%;
+        background: green;
+        width: 82%;
+      }
+      .meter-red {
+        height: 100%;
+        background: red;
+        width: 11%;
+      }
+      .meter-grey {
+        height: 100%;
+        background: grey;
+        width: 8%;
+      }
+      .subcategory {
+        background: white;
+        padding: 0px 20px 20px 20px;
+        border: 1px solid #cccddd;
+        border-radius: 6px;
+      }
+      h2 {
+        margin-top: 45px;
+      }
+      h4 {
+        vertical-align: bottom;
+        cursor: pointer;
+      }
+    </style>
+    <script>
+      function toggleOutput(id) {
+        var elem = document.getElementById(id);
+        var button = document.getElementById(id + "-button");
+        if (elem.style['display'] === 'block') {
+          button.innerHTML = "+";
+          elem.style['display'] = 'none';
+        } else {
+          button.innerHTML = "-";
+          elem.style['display'] = 'block';
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <h1>OCI Distribution Conformance Tests</h1>
+    <table>
+      <tr>
+      </tr>
+      <tr>
+        <td class="bullet-left">Summary</td>
+        <td>
+          <div class="quick-summary"><span class="darkgreen">53 passed</span><span class="darkred">7 failed</span><span class="darkgrey">5 skipped</span><div class="meter">
+              <div class="meter-green"></div>
+              <div class="meter-red"></div>
+              <div class="meter-grey"></div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="bullet-left">Start Time</td>
+        <td>Oct 17 20:50:24.438 -0700 PDT</td>
+      </tr>
+      <tr>
+        <td class="bullet-left">End Time</td>
+        <td>Oct 17 20:50:27.003 -0700 PDT</td>
+      </tr>
+      <tr>
+        <td class="bullet-left">Time Elapsed</td>
+        <td>2.5653124s</td>
+      </tr>
+      <tr>
+        <td class="bullet-left">Test Version</td>
+        <td>unknown</td>
+      </tr>
+      <tr>
+        <td class="bullet-left">Configuration</td>
+        <td><div class="bullet-right">
+          
+            OCI_ROOT_URL=http://localhost:4000<br />
+          
+            OCI_NAMESPACE=myorg/myrepo<br />
+          
+            OCI_USERNAME=*****<br />
+          
+            OCI_PASSWORD=*****<br />
+          
+            OCI_DEBUG=0<br />
+          
+            OCI_TEST_PULL=1<br />
+          
+            OCI_TEST_PUSH=1<br />
+          
+            OCI_TEST_CONTENT_DISCOVERY=1<br />
+          
+            OCI_TEST_CONTENT_MANAGEMENT=1<br />
+          
+            OCI_HIDE_SKIPPED_WORKFLOWS=0<br />
+          
+            OCI_CROSSMOUNT_NAMESPACE=myorg/other<br />
+          
+        </div></td>
+      </tr>
+    </table>
+
+    <div>
+      
+        
+        
+          
+          
+            
+              <h2>Pull</h2>
+              <div class="subcategory">
+              
+              
+                <h3>Setup</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-0-button" class="toggle" onclick="javascript:toggleOutput('output-box-0')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-0')">Populate registry with test blob</h4>
+                        <br>
+                        <div id="output-box-0" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.542715 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:24.5423159-07:00
+TIME DURATION: 103.5928ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/115735ec-679f-425a-8e5e-e37ed41a05f4
+	Server: Cowboy
+	X-Request-Id: Fq8DfNk334gYl5YAAAIi
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:24.580372 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/115735ec-679f-425a-8e5e-e37ed41a05f4?digest=sha256%3Aa840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 144
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+ewoJImF1dGhvciI6ICI4bVVDRk8xOG9zWEdCeWdIIiwKCSJhcmNoaXRlY3R1cmUiOiAiYW1kNjQiLAoJIm9zIjogImxpbnV4IiwKCSJjb25maWciOiB7fSwKCSJyb290ZnMiOiB7CgkJInR5cGUiOiAibGF5ZXJzIiwKCQkiZGlmZl9pZHMiOiBbXQoJfQp9
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:24.5799695-07:00
+TIME DURATION: 37.1119ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3Aa840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f
+	Server: Cowboy
+	X-Request-Id: Fq8DfN0JqGzeCJkAAAGF
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-1-button" class="toggle" onclick="javascript:toggleOutput('output-box-1')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-1')">Populate registry with test layer</h4>
+                        <br>
+                        <div id="output-box-1" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.621083 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:24.6207385-07:00
+TIME DURATION: 40.225ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/ae599205-d535-433c-baa6-9b32f3ea988d
+	Server: Cowboy
+	X-Request-Id: Fq8DfN93ytTKGfsAAAJi
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:24.657893 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/ae599205-d535-433c-baa6-9b32f3ea988d?digest=sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 168
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+H4sIAAAAAAAAA&#43;3OQQrCMBCF4a49xXgBSUnaHMCTRBptQRNpp6i3t0UEV7oqIv7fYgbmzeJpHHSjVy0WZCa1c/MufWVe94N3RWlrZ72x3k/30nhbFWKWLPU0Dhp6keJ8im//PuU/6pZH2WVtYx8b0Sz7LjWSR5VLG6YRBumSzOlGtjkd&#43;qDjMWiX07Befbs7AAAAAAAAAAAAAAAAAPyzO34MnqoAKAAA
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:24.657255-07:00
+TIME DURATION: 36.0853ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183
+	Server: Cowboy
+	X-Request-Id: Fq8DfOGh1mBgKm4AAAGl
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-2-button" class="toggle" onclick="javascript:toggleOutput('output-box-2')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-2')">Populate registry with test manifest</h4>
+                        <br>
+                        <div id="output-box-2" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.697693 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmE4NDBjNmI5MjAwOWFmNmVhOGM4YjZkNTE1Yzc3MjgwZTI0MDQyYzFhYWY4MzExYTY0MzhjYjJhYjdkYjllMGYiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:24.6969211-07:00
+TIME DURATION: 38.8002ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/manifests/tagtest0
+	Manifest-Digest: sha256:5e659eeee838d51b8e86faaefe40ecf47e2cb0e0d7343b5d73fe3e166f6f9856
+	Server: Cowboy
+	X-Request-Id: Fq8DfOOV1AhA0UMAAAKC
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-3-button" class="toggle" onclick="javascript:toggleOutput('output-box-3')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-3')">Get the name of a tag</h4>
+                        <br>
+                        <div id="output-box-3" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.734037 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:24.7335844-07:00
+TIME DURATION: 35.7117ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 37
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfOYr3tj9eEQAAAKi
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;tagtest0&#34;
+   ]
+}
+==============================================================================
+
+2021/10/17 20:50:24.768592 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmE4NDBjNmI5MjAwOWFmNmVhOGM4YjZkNTE1Yzc3MjgwZTI0MDQyYzFhYWY4MzExYTY0MzhjYjJhYjdkYjllMGYiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:24.7681102-07:00
+TIME DURATION: 33.9651ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/manifests/tagtest0
+	Manifest-Digest: sha256:5e659eeee838d51b8e86faaefe40ecf47e2cb0e0d7343b5d73fe3e166f6f9856
+	Server: Cowboy
+	X-Request-Id: Fq8DfOg93iRCRGsAAAWh
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result grey">
+                        <div id="output-box-4-button" class="toggle" onclick="javascript:toggleOutput('output-box-4')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-4')">Get tag name from environment</h4>
+                        <br>
+                        <div id="output-box-4" style="display: none;">
+                          <pre class="pre-box">you have skipped this test.</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Pull blobs</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-5-button" class="toggle" onclick="javascript:toggleOutput('output-box-5')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-5')">HEAD request to nonexistent blob should result in 404 response</h4>
+                        <br>
+                        <div id="output-box-5" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.802502 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+HEAD  /v2/myorg/myrepo/blobs/sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:24.8022326-07:00
+TIME DURATION: 32.8625ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfOpLH8TdrosAAAEm
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-6-button" class="toggle" onclick="javascript:toggleOutput('output-box-6')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-6')">HEAD request to existing blob should yield 200</h4>
+                        <br>
+                        <div id="output-box-6" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.834918 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+HEAD  /v2/myorg/myrepo/blobs/sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:24.8345797-07:00
+TIME DURATION: 31.9639ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 144
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfOw7LgA7AiAAAAAD
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-7-button" class="toggle" onclick="javascript:toggleOutput('output-box-7')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-7')">GET nonexistent blob should result in 404 response</h4>
+                        <br>
+                        <div id="output-box-7" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.868846 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:24.868591-07:00
+TIME DURATION: 33.5441ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfO49uQxp_Z8AAAXB
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-8-button" class="toggle" onclick="javascript:toggleOutput('output-box-8')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-8')">GET request to existing blob URL should yield 200</h4>
+                        <br>
+                        <div id="output-box-8" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.910132 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:24.9096874-07:00
+TIME DURATION: 40.7125ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 144
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPCi0cilK50AAAHF
+BODY         :
+{
+	&#34;author&#34;: &#34;8mUCFO18osXGBygH&#34;,
+	&#34;architecture&#34;: &#34;amd64&#34;,
+	&#34;os&#34;: &#34;linux&#34;,
+	&#34;config&#34;: {},
+	&#34;rootfs&#34;: {
+		&#34;type&#34;: &#34;layers&#34;,
+		&#34;diff_ids&#34;: []
+	}
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Pull manifests</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-9-button" class="toggle" onclick="javascript:toggleOutput('output-box-9')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-9')">HEAD request to nonexistent manifest should return 404</h4>
+                        <br>
+                        <div id="output-box-9" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.950862 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+HEAD  /v2/myorg/myrepo/manifests/.INVALID_MANIFEST_NAME  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:24.9505496-07:00
+TIME DURATION: 40.2558ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPMYi4yjffcAAAEH
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-10-button" class="toggle" onclick="javascript:toggleOutput('output-box-10')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-10')">HEAD request to manifest path (digest) should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-10" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:24.989924 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+HEAD  /v2/myorg/myrepo/manifests/sha256:5e659eeee838d51b8e86faaefe40ecf47e2cb0e0d7343b5d73fe3e166f6f9856  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:24.9894278-07:00
+TIME DURATION: 38.4341ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPVvsyQNqfIAAAXh
+BODY         :
+*** Error: Unable to format response body - &#34;unexpected end of JSON input&#34; ***
+
+Log Body as-is:
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-11-button" class="toggle" onclick="javascript:toggleOutput('output-box-11')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-11')">HEAD request to manifest path (tag) should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-11" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.025927 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:25.0252943-07:00
+TIME DURATION: 35.2154ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPeJY_hc3esAAAHl
+BODY         :
+{
+   &#34;manifest&#34;: {
+      &#34;config&#34;: {
+         &#34;digest&#34;: &#34;sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f&#34;,
+         &#34;mediaType&#34;: &#34;application/vnd.oci.image.config.v1&#43;json&#34;,
+         &#34;size&#34;: 144
+      },
+      &#34;layers&#34;: [
+         {
+            &#34;digest&#34;: &#34;sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183&#34;,
+            &#34;mediaType&#34;: &#34;application/vnd.oci.image.layer.v1.tar&#43;gzip&#34;,
+            &#34;size&#34;: 168
+         }
+      ],
+      &#34;schemaVersion&#34;: 2
+   }
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-12-button" class="toggle" onclick="javascript:toggleOutput('output-box-12')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-12')">GET nonexistent manifest should return 404</h4>
+                        <br>
+                        <div id="output-box-12" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.062091 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/.INVALID_MANIFEST_NAME  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:25.0617326-07:00
+TIME DURATION: 35.6681ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPm73VQw9lIAAALC
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-13-button" class="toggle" onclick="javascript:toggleOutput('output-box-13')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-13')">GET request to manifest path (digest) should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-13" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.099705 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/sha256:5e659eeee838d51b8e86faaefe40ecf47e2cb0e0d7343b5d73fe3e166f6f9856  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:25.0991375-07:00
+TIME DURATION: 36.8947ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfPv11jiI51IAAAAI
+BODY         :
+{
+   &#34;manifest&#34;: {
+      &#34;config&#34;: {
+         &#34;digest&#34;: &#34;sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f&#34;,
+         &#34;mediaType&#34;: &#34;application/vnd.oci.image.config.v1&#43;json&#34;,
+         &#34;size&#34;: 144
+      },
+      &#34;layers&#34;: [
+         {
+            &#34;digest&#34;: &#34;sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183&#34;,
+            &#34;mediaType&#34;: &#34;application/vnd.oci.image.layer.v1.tar&#43;gzip&#34;,
+            &#34;size&#34;: 168
+         }
+      ],
+      &#34;schemaVersion&#34;: 2
+   }
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-14-button" class="toggle" onclick="javascript:toggleOutput('output-box-14')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-14')">GET request to manifest path (tag) should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-14" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.137461 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:25.1369752-07:00
+TIME DURATION: 37.1219ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfP4-Pmyj6zsAAAIF
+BODY         :
+{
+   &#34;manifest&#34;: {
+      &#34;config&#34;: {
+         &#34;digest&#34;: &#34;sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f&#34;,
+         &#34;mediaType&#34;: &#34;application/vnd.oci.image.config.v1&#43;json&#34;,
+         &#34;size&#34;: 144
+      },
+      &#34;layers&#34;: [
+         {
+            &#34;digest&#34;: &#34;sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183&#34;,
+            &#34;mediaType&#34;: &#34;application/vnd.oci.image.layer.v1.tar&#43;gzip&#34;,
+            &#34;size&#34;: 168
+         }
+      ],
+      &#34;schemaVersion&#34;: 2
+   }
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Error codes</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-15-button" class="toggle" onclick="javascript:toggleOutput('output-box-15')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-15')">400 response body should contain OCI-conforming JSON message</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-15" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:25.183926 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/sha256:totallywrong  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;YmxhYmxhYmxh&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 400 Bad Request
+RECEIVED AT  : 2021-10-17T20:50:25.1834118-07:00
+TIME DURATION: 45.8051ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 1425
+	Content-Type: text/markdown; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+BODY         :
+# Plug.Parsers.ParseError at PUT /v2/myorg/myrepo/manifests/sha256:totallywrong
+
+Exception:
+
+    ** (Plug.Parsers.ParseError) malformed request, a Jason.DecodeError exception was raised with message &#34;unexpected byte at position 0: 0x62 (&#39;b&#39;)&#34;
+        (plug 1.12.1) lib/plug/parsers/json.ex:90: Plug.Parsers.JSON.decode/2
+        (plug 1.12.1) lib/plug/parsers.ex:339: Plug.Parsers.reduce/8
+        (muster_api 0.1.0) lib/muster_api/endpoint.ex:1: MusterApi.Endpoint.plug_builder_call/2
+        (muster_api 0.1.0) lib/plug/debugger.ex:136: MusterApi.Endpoint.&#34;call (overridable 3)&#34;/2
+        (muster_api 0.1.0) lib/muster_api/endpoint.ex:1: MusterApi.Endpoint.call/2
+        (phoenix 1.5.9) lib/phoenix/endpoint/cowboy2_handler.ex:65: Phoenix.Endpoint.Cowboy2Handler.init/4
+        (cowboy 2.9.0) /home/tmck/devel/muster_app/deps/cowboy/src/cowboy_handler.erl:37: :cowboy_handler.execute/2
+        (cowboy 2.9.0) /home/tmck/devel/muster_app/deps/cowboy/src/cowboy_stream_h.erl:306: :cowboy_stream_h.execute/3
+    
+
+## Connection details
+
+### Params
+
+    %{}
+
+### Request info
+
+  * URI: http://localhost:4000/v2/myorg/myrepo/manifests/sha256:totallywrong
+  * Query string: 
+
+### Headers
+  
+  * accept: application/vnd.oci.image.manifest.v1&#43;json
+  * content-length: 9
+  * content-type: application/vnd.oci.image.manifest.v1&#43;json
+  * host: localhost:4000
+  * user-agent: distribution-spec-conformance-tests
+
+### Session
+
+    nil
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;*json.SyntaxError | 0xc0000b03f0&gt;: {
+        msg: &#34;invalid character &#39;#&#39; looking for beginning of value&#34;,
+        Offset: 1,
+    }
+to be nil</pre>
+                        <br>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Teardown</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-16-button" class="toggle" onclick="javascript:toggleOutput('output-box-16')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-16')">Delete config blob created in setup</h4>
+                        <br>
+                        <div id="output-box-16" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.216287 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:a840c6b92009af6ea8c8b6d515c77280e24042c1aaf8311a6438cb2ab7db9e0f  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:25.2160417-07:00
+TIME DURATION: 31.5205ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfQL5UGgQ8m8AAALi
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-17-button" class="toggle" onclick="javascript:toggleOutput('output-box-17')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-17')">Delete layer blob created in setup</h4>
+                        <br>
+                        <div id="output-box-17" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.248351 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:25.2480193-07:00
+TIME DURATION: 31.6348ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfQTfTOhJhukAAABD
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-18-button" class="toggle" onclick="javascript:toggleOutput('output-box-18')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-18')">Delete manifest created in setup</h4>
+                        <br>
+                        <div id="output-box-18" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.276204 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/manifests/sha256:5e659eeee838d51b8e86faaefe40ecf47e2cb0e0d7343b5d73fe3e166f6f9856  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:25.2759317-07:00
+TIME DURATION: 27.4544ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfQZ-sexMK_gAAAIl
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+            
+          
+        </div>
+        
+          
+          
+            
+              <h2>Push</h2>
+              <div class="subcategory">
+              
+              
+                <h3>Blob Upload Streamed</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-19-button" class="toggle" onclick="javascript:toggleOutput('output-box-19')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-19')">PATCH request with blob in body should yield 202 response</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-19" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:25.306977 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.3066843-07:00
+TIME DURATION: 30.369ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/f00c9a91-2e5f-419d-8ba9-c40ef1582657
+	Server: Cowboy
+	X-Request-Id: Fq8DfQhXEziJ4lwAAABj
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:25.344215 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PATCH  /v2/myorg/myrepo/blobs/uploads/f00c9a91-2e5f-419d-8ba9-c40ef1582657  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+TkJBIEphbSBvbiBteSBOQkEgdG9hc3Q=
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 500 Internal Server Error
+RECEIVED AT  : 2021-10-17T20:50:25.3436092-07:00
+TIME DURATION: 36.5486ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 1470
+	Content-Type: text/markdown; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfQoxXfjqnUIAAAFG
+BODY         :
+# MatchError at PATCH /v2/myorg/myrepo/blobs/uploads/f00c9a91-2e5f-419d-8ba9-c40ef1582657
+
+Exception:
+
+    ** (MatchError) no match of right hand side value: []
+        (muster_api 0.1.0) lib/muster_api/controllers/registry_controller.ex:63: MusterApi.RegistryController.upload_blob_chunk/2
+        (muster_api 0.1.0) lib/muster_api/controllers/registry_controller.ex:1: MusterApi.RegistryController.action/2
+        (muster_api 0.1.0) lib/muster_api/controllers/registry_controller.ex:1: MusterApi.RegistryController.phoenix_controller_pipeline/2
+        (phoenix 1.5.9) lib/phoenix/router.ex:352: Phoenix.Router.__call__/2
+        (muster_api 0.1.0) lib/muster_api/endpoint.ex:1: MusterApi.Endpoint.plug_builder_call/2
+        (muster_api 0.1.0) lib/plug/debugger.ex:136: MusterApi.Endpoint.&#34;call (overridable 3)&#34;/2
+        (muster_api 0.1.0) lib/muster_api/endpoint.ex:1: MusterApi.Endpoint.call/2
+        (phoenix 1.5.9) lib/phoenix/endpoint/cowboy2_handler.ex:65: Phoenix.Endpoint.Cowboy2Handler.init/4
+    
+
+## Connection details
+
+### Params
+
+    %{&#34;location&#34; =&gt; &#34;f00c9a91-2e5f-419d-8ba9-c40ef1582657&#34;, &#34;name&#34; =&gt; &#34;myrepo&#34;, &#34;namespace&#34; =&gt; &#34;myorg&#34;}
+
+### Request info
+
+  * URI: http://localhost:4000/v2/myorg/myrepo/blobs/uploads/f00c9a91-2e5f-419d-8ba9-c40ef1582657
+  * Query string: 
+
+### Headers
+  
+  * content-length: 23
+  * content-type: application/octet-stream
+  * host: localhost:4000
+  * user-agent: distribution-spec-conformance-tests
+
+### Session
+
+    %{}
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;int&gt;: 500
+to equal
+    &lt;int&gt;: 202</pre>
+                        <br>
+                      </div>
+                    
+                  
+                    
+                    
+                  <br>
+                
+              
+                <h3>Blob Upload Monolithic</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-21-button" class="toggle" onclick="javascript:toggleOutput('output-box-21')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-21')">GET nonexistent blob should result in 404 response</h4>
+                        <br>
+                        <div id="output-box-21" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.380848 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:25.3805738-07:00
+TIME DURATION: 33.7959ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfQzIH5jXQOIAAAEn
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-22-button" class="toggle" onclick="javascript:toggleOutput('output-box-22')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-22')">POST request with digest and blob should yield a 201 or 202</h4>
+                        <br>
+                        <div id="output-box-22" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.413921 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/?digest=sha256%3A4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 144
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+ewoJImF1dGhvciI6ICJPOG1uTW1ycTNvaE5jTkx2IiwKCSJhcmNoaXRlY3R1cmUiOiAiYW1kNjQiLAoJIm9zIjogImxpbnV4IiwKCSJjb25maWciOiB7fSwKCSJyb290ZnMiOiB7CgkJInR5cGUiOiAibGF5ZXJzIiwKCQkiZGlmZl9pZHMiOiBbXQoJfQp9
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.4135798-07:00
+TIME DURATION: 32.5614ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 21
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/0686c802-8a30-4572-844f-0322c253179e
+	Server: Cowboy
+	X-Request-Id: Fq8DfQ69oFz7k4IAAAMC
+BODY         :
+{
+   &#34;type&#34;: &#34;monolithic&#34;
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-23-button" class="toggle" onclick="javascript:toggleOutput('output-box-23')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-23')">GET request to blob URL from prior request should yield 200 or 404 based on response code</h4>
+                        <br>
+                        <div id="output-box-23" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.442094 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:25.4417662-07:00
+TIME DURATION: 27.7263ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfRBlJ8xYWgIAAAFH
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-24-button" class="toggle" onclick="javascript:toggleOutput('output-box-24')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-24')">POST request should yield a session ID</h4>
+                        <br>
+                        <div id="output-box-24" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.471395 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.4710429-07:00
+TIME DURATION: 28.7527ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:24 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/a30c3c8a-bdee-47ad-ab9e-9a3a5e4847aa
+	Server: Cowboy
+	X-Request-Id: Fq8DfRIn3jhTynwAAAMi
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-25-button" class="toggle" onclick="javascript:toggleOutput('output-box-25')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-25')">PUT upload of a blob should yield a 201 Response</h4>
+                        <br>
+                        <div id="output-box-25" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.502142 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/a30c3c8a-bdee-47ad-ab9e-9a3a5e4847aa?digest=sha256%3A4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 144
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+ewoJImF1dGhvciI6ICJPOG1uTW1ycTNvaE5jTkx2IiwKCSJhcmNoaXRlY3R1cmUiOiAiYW1kNjQiLAoJIm9zIjogImxpbnV4IiwKCSJjb25maWciOiB7fSwKCSJyb290ZnMiOiB7CgkJInR5cGUiOiAibGF5ZXJzIiwKCQkiZGlmZl9pZHMiOiBbXQoJfQp9
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.5015388-07:00
+TIME DURATION: 29.9733ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095
+	Server: Cowboy
+	X-Request-Id: Fq8DfRP7kqQVjAEAAACD
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-26-button" class="toggle" onclick="javascript:toggleOutput('output-box-26')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-26')">GET request to existing blob should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-26" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.532323 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:25.5318831-07:00
+TIME DURATION: 29.6205ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 144
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfRXJoVyAbwAAAAJF
+BODY         :
+{
+	&#34;author&#34;: &#34;O8mnMmrq3ohNcNLv&#34;,
+	&#34;architecture&#34;: &#34;amd64&#34;,
+	&#34;os&#34;: &#34;linux&#34;,
+	&#34;config&#34;: {},
+	&#34;rootfs&#34;: {
+		&#34;type&#34;: &#34;layers&#34;,
+		&#34;diff_ids&#34;: []
+	}
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-27-button" class="toggle" onclick="javascript:toggleOutput('output-box-27')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-27')">PUT upload of a layer blob should yield a 201 Response</h4>
+                        <br>
+                        <div id="output-box-27" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.562477 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.5621662-07:00
+TIME DURATION: 29.696ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/32fb95f9-2415-4221-8098-8e10e0ac25cf
+	Server: Cowboy
+	X-Request-Id: Fq8DfReME2wPDiIAAACj
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:25.596229 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/32fb95f9-2415-4221-8098-8e10e0ac25cf?digest=sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 168
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+H4sIAAAAAAAAA&#43;3OQQrCMBCF4a49xXgBSUnaHMCTRBptQRNpp6i3t0UEV7oqIv7fYgbmzeJpHHSjVy0WZCa1c/MufWVe94N3RWlrZ72x3k/30nhbFWKWLPU0Dhp6keJ8im//PuU/6pZH2WVtYx8b0Sz7LjWSR5VLG6YRBumSzOlGtjkd&#43;qDjMWiX07Befbs7AAAAAAAAAAAAAAAAAPyzO34MnqoAKAAA
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.5958077-07:00
+TIME DURATION: 33.165ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183
+	Server: Cowboy
+	X-Request-Id: Fq8DfRmaNnCGPQoAAAFn
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-28-button" class="toggle" onclick="javascript:toggleOutput('output-box-28')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-28')">GET request to existing layer should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-28" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.627026 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:25.6265269-07:00
+TIME DURATION: 30.1684ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 168
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfRtda2xQUIgAAAYB
+BODY         :
+‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½íÎA
+Â0…á®=ÅxIIÚÀ“DmAi§¨··EWº*&#34;þßbæÍâit£W-d&amp;µsó.}e^÷ƒwEikg½±ÞO÷Òx[b–,õ4z‘â|Šoÿ&gt;å?ê–GÙemcÑ,û.5’G•K¦é’ÌéF¶9ú ã1h—Ó°^}»;ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ü³;~žªï¿½(ï¿½ï¿½
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Blob Upload Chunked</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-29-button" class="toggle" onclick="javascript:toggleOutput('output-box-29')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-29')">Out-of-order blob upload should return 416</h4>
+                        <br>
+                        <div id="output-box-29" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.655009 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 0
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.6546267-07:00
+TIME DURATION: 27.4351ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/2ec9f8ae-b857-49b1-af70-bfebdf5f27aa
+	Server: Cowboy
+	X-Request-Id: Fq8DfR0ZqygtnpMAAAYh
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:25.684114 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PATCH  /v2/myorg/myrepo/blobs/uploads/2ec9f8ae-b857-49b1-af70-bfebdf5f27aa  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 22
+	Content-Range: 3-24
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+bG8sIGhvdyBhcmUgeW91IHRvZGF5Pw==
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 416 Requested Range Not Satisfiable
+RECEIVED AT  : 2021-10-17T20:50:25.683768-07:00
+TIME DURATION: 28.6818ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfR7ZB8R3344AAAJl
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-30-button" class="toggle" onclick="javascript:toggleOutput('output-box-30')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-30')">PATCH request with first chunk should return 202</h4>
+                        <br>
+                        <div id="output-box-30" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.714138 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 0
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.7138456-07:00
+TIME DURATION: 29.6196ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/67de3591-45b3-423f-93ee-71b93d250df0
+	Server: Cowboy
+	X-Request-Id: Fq8DfSCkn6A0L-cAAAZB
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:25.743682 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PATCH  /v2/myorg/myrepo/blobs/uploads/67de3591-45b3-423f-93ee-71b93d250df0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 3
+	Content-Range: 0-2
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+SGVs
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.743178-07:00
+TIME DURATION: 28.974ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/67de3591-45b3-423f-93ee-71b93d250df0
+	Server: Cowboy
+	X-Request-Id: Fq8DfSJVqXBuSzgAAAFm
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-31-button" class="toggle" onclick="javascript:toggleOutput('output-box-31')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-31')">PUT request with final chunk should return 201</h4>
+                        <br>
+                        <div id="output-box-31" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.774796 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/67de3591-45b3-423f-93ee-71b93d250df0?digest=sha256%3A6e766a49e512e0ba0bc935e2aacd3e5a4a34add17f83afc4c9e669c70241cd48  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 22
+	Content-Range: 3-24
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+bG8sIGhvdyBhcmUgeW91IHRvZGF5Pw==
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.774442-07:00
+TIME DURATION: 30.5611ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A6e766a49e512e0ba0bc935e2aacd3e5a4a34add17f83afc4c9e669c70241cd48
+	Server: Cowboy
+	X-Request-Id: Fq8DfSQ4z8QPbroAAANC
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Cross-Repository Blob Mount</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-32-button" class="toggle" onclick="javascript:toggleOutput('output-box-32')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-32')">Cross-mounting of a blob without the from argument should yield session id</h4>
+                        <br>
+                        <div id="output-box-32" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.802335 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/other/blobs/uploads/?mount=sha256%3Ab94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.8019603-07:00
+TIME DURATION: 26.9875ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/other/blobs/uploads/33f5fda2-24b1-47c7-8466-feb4ce222e56
+	Server: Cowboy
+	X-Request-Id: Fq8DfSXhQZRrw7kAAADE
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-33-button" class="toggle" onclick="javascript:toggleOutput('output-box-33')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-33')">POST request to mount another repository&#39;s blob should return 201 or 202</h4>
+                        <br>
+                        <div id="output-box-33" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.832038 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/other/blobs/uploads/?from=myorg%2Fmyrepo&amp;mount=sha256%3A852411eaf653ebebfa34b688ad1736c9da4decadb8f55b839b550d64eaad3f75  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:25.8317387-07:00
+TIME DURATION: 29.253ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/other/blobs/uploads/56620640-3350-4ab4-a1ba-694bc3c1e83b
+	Server: Cowboy
+	X-Request-Id: Fq8DfSepBVyWAXMAAAKF
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result grey">
+                        <div id="output-box-34-button" class="toggle" onclick="javascript:toggleOutput('output-box-34')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-34')">GET request to test digest within cross-mount namespace should return 200</h4>
+                        <br>
+                        <div id="output-box-34" style="display: none;">
+                          <pre class="pre-box">you have skipped this test.</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-35-button" class="toggle" onclick="javascript:toggleOutput('output-box-35')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-35')">Cross-mounting of nonexistent blob should yield session id</h4>
+                        <br>
+                        <div id="output-box-35" style="display: none;">
+                          <pre class="pre-box"></pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result grey">
+                        <div id="output-box-36-button" class="toggle" onclick="javascript:toggleOutput('output-box-36')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-36')">Cross-mounting without from, and automatic content discovery enabled should return a 201</h4>
+                        <br>
+                        <div id="output-box-36" style="display: none;">
+                          <pre class="pre-box">you have skipped this test.</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result grey">
+                        <div id="output-box-37-button" class="toggle" onclick="javascript:toggleOutput('output-box-37')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-37')">Cross-mounting without from, and automatic content discovery disabled should return a 202</h4>
+                        <br>
+                        <div id="output-box-37" style="display: none;">
+                          <pre class="pre-box">you have skipped this test.</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Manifest Upload</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-38-button" class="toggle" onclick="javascript:toggleOutput('output-box-38')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-38')">GET nonexistent manifest should return 404</h4>
+                        <br>
+                        <div id="output-box-38" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.863014 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/.INVALID_MANIFEST_NAME  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 404 Not Found
+RECEIVED AT  : 2021-10-17T20:50:25.8627843-07:00
+TIME DURATION: 29.4997ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfSmFfewWacoAAADD
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-39-button" class="toggle" onclick="javascript:toggleOutput('output-box-39')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-39')">PUT should accept a manifest upload</h4>
+                        <br>
+                        <div id="output-box-39" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:25.889473 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OjRiZjc5YmIwZWM2Y2Y1NzNkMzMwYWRmNWJhNDY2NjVhOTI5MzY3M2RjYzQwMDk3NjZjZWFkNzA5MzhiYTUwOTUiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.8890662-07:00
+TIME DURATION: 25.9051ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test0
+	Manifest-Digest: sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da
+	Server: Cowboy
+	X-Request-Id: Fq8DfSsV6bxu3m0AAADj
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:25.918174 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test1  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OjRiZjc5YmIwZWM2Y2Y1NzNkMzMwYWRmNWJhNDY2NjVhOTI5MzY3M2RjYzQwMDk3NjZjZWFkNzA5MzhiYTUwOTUiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.9177192-07:00
+TIME DURATION: 28.1731ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test1
+	Manifest-Digest: sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da
+	Server: Cowboy
+	X-Request-Id: Fq8DfSzG_uA6h-QAAAGG
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:25.948631 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test2  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OjRiZjc5YmIwZWM2Y2Y1NzNkMzMwYWRmNWJhNDY2NjVhOTI5MzY3M2RjYzQwMDk3NjZjZWFkNzA5MzhiYTUwOTUiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.9480458-07:00
+TIME DURATION: 29.7925ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test2
+	Manifest-Digest: sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da
+	Server: Cowboy
+	X-Request-Id: Fq8DfS6VkaCMYnUAAAZh
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:25.978909 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test3  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OjRiZjc5YmIwZWM2Y2Y1NzNkMzMwYWRmNWJhNDY2NjVhOTI5MzY3M2RjYzQwMDk3NjZjZWFkNzA5MzhiYTUwOTUiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:25.9784408-07:00
+TIME DURATION: 29.6597ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test3
+	Manifest-Digest: sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da
+	Server: Cowboy
+	X-Request-Id: Fq8DfTBnQggxBVkAAAGm
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-40-button" class="toggle" onclick="javascript:toggleOutput('output-box-40')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-40')">Registry should accept a manifest upload with no layers</h4>
+                        <br>
+                        <div id="output-box-40" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.007685 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/emptylayer  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OjRiZjc5YmIwZWM2Y2Y1NzNkMzMwYWRmNWJhNDY2NjVhOTI5MzY3M2RjYzQwMDk3NjZjZWFkNzA5MzhiYTUwOTUiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFtdCn0=&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.0071248-07:00
+TIME DURATION: 28.0489ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/emptylayer
+	Manifest-Digest: sha256:acd5bddc2631aafbf1a775b1ccd6e0fa072eba8dc60d9c6fce446c8053926709
+	Server: Cowboy
+	X-Request-Id: Fq8DfTIc5TDXuEkAAAAo
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-41-button" class="toggle" onclick="javascript:toggleOutput('output-box-41')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-41')">GET request to manifest URL (digest) should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-41" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.040529 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.0399765-07:00
+TIME DURATION: 32.0624ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfTQPJMBaSXIAAAKl
+BODY         :
+{
+   &#34;manifest&#34;: {
+      &#34;config&#34;: {
+         &#34;digest&#34;: &#34;sha256:4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095&#34;,
+         &#34;mediaType&#34;: &#34;application/vnd.oci.image.config.v1&#43;json&#34;,
+         &#34;size&#34;: 144
+      },
+      &#34;layers&#34;: [
+         {
+            &#34;digest&#34;: &#34;sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183&#34;,
+            &#34;mediaType&#34;: &#34;application/vnd.oci.image.layer.v1.tar&#43;gzip&#34;,
+            &#34;size&#34;: 168
+         }
+      ],
+      &#34;schemaVersion&#34;: 2
+   }
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Teardown</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-42-button" class="toggle" onclick="javascript:toggleOutput('output-box-42')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-42')">Delete config blob created in tests</h4>
+                        <br>
+                        <div id="output-box-42" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.069521 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:4bf79bb0ec6cf573d330adf5ba46665a9293673dcc4009766cead70938ba5095  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.0691531-07:00
+TIME DURATION: 28.4688ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfTXSfzzbZb0AAAHG
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-43-button" class="toggle" onclick="javascript:toggleOutput('output-box-43')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-43')">Delete layer blob created in setup</h4>
+                        <br>
+                        <div id="output-box-43" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.101860 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.10162-07:00
+TIME DURATION: 31.8521ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfTe7wgRHxBgAAAEE
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-44-button" class="toggle" onclick="javascript:toggleOutput('output-box-44')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-44')">Delete manifest created in tests</h4>
+                        <br>
+                        <div id="output-box-44" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.133886 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/manifests/sha256:88a924ccb7f11cd717035e71dc6ddd9d9cf6a76026da6ab30ea75e13560cc4da  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.1335541-07:00
+TIME DURATION: 31.5666ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfTml83gmr1IAAAED
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+            
+          
+        </div>
+        
+          
+          
+            
+              <h2>Content Discovery</h2>
+              <div class="subcategory">
+              
+              
+                <h3>Setup</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-45-button" class="toggle" onclick="javascript:toggleOutput('output-box-45')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-45')">Populate registry with test blob</h4>
+                        <br>
+                        <div id="output-box-45" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.165395 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:26.1650995-07:00
+TIME DURATION: 31.0771ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/9c839d49-64e8-4529-ab37-dd3738f55746
+	Server: Cowboy
+	X-Request-Id: Fq8DfTuFL3QSPmoAAAHm
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:26.194095 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/9c839d49-64e8-4529-ab37-dd3738f55746?digest=sha256%3Ac0f8ff1dd63ef2f8fe746e613b34e0a3c5af42689bb942acbec7cd7af2839759  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 144
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+ewoJImF1dGhvciI6ICJxUFQzNlJqQzJkWXlhZTR3IiwKCSJhcmNoaXRlY3R1cmUiOiAiYW1kNjQiLAoJIm9zIjogImxpbnV4IiwKCSJjb25maWciOiB7fSwKCSJyb290ZnMiOiB7CgkJInR5cGUiOiAibGF5ZXJzIiwKCQkiZGlmZl9pZHMiOiBbXQoJfQp9
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.1936079-07:00
+TIME DURATION: 28.0785ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3Ac0f8ff1dd63ef2f8fe746e613b34e0a3c5af42689bb942acbec7cd7af2839759
+	Server: Cowboy
+	X-Request-Id: Fq8DfT09j8iK9E8AAABI
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-46-button" class="toggle" onclick="javascript:toggleOutput('output-box-46')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-46')">Populate registry with test layer</h4>
+                        <br>
+                        <div id="output-box-46" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.224240 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:26.223846-07:00
+TIME DURATION: 29.5978ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/3b940830-497b-4dfd-b248-6c572fcccfd5
+	Server: Cowboy
+	X-Request-Id: Fq8DfT8LWDDckTMAAAEk
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:26.254937 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/3b940830-497b-4dfd-b248-6c572fcccfd5?digest=sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 168
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+H4sIAAAAAAAAA&#43;3OQQrCMBCF4a49xXgBSUnaHMCTRBptQRNpp6i3t0UEV7oqIv7fYgbmzeJpHHSjVy0WZCa1c/MufWVe94N3RWlrZ72x3k/30nhbFWKWLPU0Dhp6keJ8im//PuU/6pZH2WVtYx8b0Sz7LjWSR5VLG6YRBumSzOlGtjkd&#43;qDjMWiX07Befbs7AAAAAAAAAAAAAAAAAPyzO34MnqoAKAAA
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.2545303-07:00
+TIME DURATION: 30.1393ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183
+	Server: Cowboy
+	X-Request-Id: Fq8DfUDcDvx0rPYAAAaB
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-47-button" class="toggle" onclick="javascript:toggleOutput('output-box-47')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-47')">Populate registry with test tags</h4>
+                        <br>
+                        <div id="output-box-47" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.289825 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmMwZjhmZjFkZDYzZWYyZjhmZTc0NmU2MTNiMzRlMGEzYzVhZjQyNjg5YmI5NDJhY2JlYzdjZDdhZjI4Mzk3NTkiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.287521-07:00
+TIME DURATION: 32.4318ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test0
+	Manifest-Digest: sha256:41f1318716561950d6c3b1d4ef6a508221d97273d0610222511a8dc830a07406
+	Server: Cowboy
+	X-Request-Id: Fq8DfULM8uQJv6MAAAIG
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:26.318055 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test1  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmMwZjhmZjFkZDYzZWYyZjhmZTc0NmU2MTNiMzRlMGEzYzVhZjQyNjg5YmI5NDJhY2JlYzdjZDdhZjI4Mzk3NTkiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.3176111-07:00
+TIME DURATION: 27.6796ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test1
+	Manifest-Digest: sha256:41f1318716561950d6c3b1d4ef6a508221d97273d0610222511a8dc830a07406
+	Server: Cowboy
+	X-Request-Id: Fq8DfUSd5qAKUUMAAAFE
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:26.356330 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test2  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmMwZjhmZjFkZDYzZWYyZjhmZTc0NmU2MTNiMzRlMGEzYzVhZjQyNjg5YmI5NDJhY2JlYzdjZDdhZjI4Mzk3NTkiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.3558745-07:00
+TIME DURATION: 37.7444ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test2
+	Manifest-Digest: sha256:41f1318716561950d6c3b1d4ef6a508221d97273d0610222511a8dc830a07406
+	Server: Cowboy
+	X-Request-Id: Fq8DfUbl6OChAfsAAANi
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:26.388046 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/test3  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmMwZjhmZjFkZDYzZWYyZjhmZTc0NmU2MTNiMzRlMGEzYzVhZjQyNjg5YmI5NDJhY2JlYzdjZDdhZjI4Mzk3NTkiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.3875426-07:00
+TIME DURATION: 31.1247ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Location: /v2/myorg/myrepo/manifests/test3
+	Manifest-Digest: sha256:41f1318716561950d6c3b1d4ef6a508221d97273d0610222511a8dc830a07406
+	Server: Cowboy
+	X-Request-Id: Fq8DfUjD3rCKcOsAAABo
+BODY         :
+
+==============================================================================
+
+2021/10/17 20:50:26.418979 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.4186198-07:00
+TIME DURATION: 30.5218ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 82
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfUqqechyocYAAAGH
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;,
+      &#34;test1&#34;,
+      &#34;test2&#34;,
+      &#34;test3&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result grey">
+                        <div id="output-box-48-button" class="toggle" onclick="javascript:toggleOutput('output-box-48')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-48')">Populate registry with test tags (no push)</h4>
+                        <br>
+                        <div id="output-box-48" style="display: none;">
+                          <pre class="pre-box">you have skipped this test.</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Test content discovery endpoints</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-49-button" class="toggle" onclick="javascript:toggleOutput('output-box-49')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-49')">GET request to list tags should yield 200 response</h4>
+                        <br>
+                        <div id="output-box-49" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.448490 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.4480997-07:00
+TIME DURATION: 28.6265ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 82
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfUxntRTSbcEAAAEj
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;,
+      &#34;test1&#34;,
+      &#34;test2&#34;,
+      &#34;test3&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-50-button" class="toggle" onclick="javascript:toggleOutput('output-box-50')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-50')">GET number of tags should be limitable by `n` query parameter</h4>
+                        <br>
+                        <div id="output-box-50" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.478742 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list?n=3  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.4783923-07:00
+TIME DURATION: 29.777ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 58
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:25 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfU4vrNAsZ5QAAAIm
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-51-button" class="toggle" onclick="javascript:toggleOutput('output-box-51')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-51')">GET start of tag is set by `last` query parameter</h4>
+                        <br>
+                        <div id="output-box-51" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.510421 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list?n=3  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.5100505-07:00
+TIME DURATION: 31.1526ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 58
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfVAPCsjAy54AAAJG
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;
+   ]
+}
+==============================================================================
+
+2021/10/17 20:50:26.539466 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list?last=test0&amp;n=3  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.5391268-07:00
+TIME DURATION: 28.6254ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 50
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfVHRNuwhRhgAAAGn
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;test1&#34;,
+      &#34;test2&#34;,
+      &#34;test3&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Teardown</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-52-button" class="toggle" onclick="javascript:toggleOutput('output-box-52')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-52')">Delete config blob created in tests</h4>
+                        <br>
+                        <div id="output-box-52" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.568371 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:c0f8ff1dd63ef2f8fe746e613b34e0a3c5af42689bb942acbec7cd7af2839759  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.5680609-07:00
+TIME DURATION: 28.4175ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfVORmghAiAEAAAJm
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-53-button" class="toggle" onclick="javascript:toggleOutput('output-box-53')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-53')">Delete layer blob created in setup</h4>
+                        <br>
+                        <div id="output-box-53" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.598321 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.5980605-07:00
+TIME DURATION: 29.582ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfVVVuiwi2k0AAALF
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-54-button" class="toggle" onclick="javascript:toggleOutput('output-box-54')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-54')">Delete created manifest &amp; associated tags</h4>
+                        <br>
+                        <div id="output-box-54" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.626438 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/manifests/sha256:41f1318716561950d6c3b1d4ef6a508221d97273d0610222511a8dc830a07406  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.6260646-07:00
+TIME DURATION: 27.5903ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfVb7KIBt0ckAAAFk
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+            
+          
+        </div>
+        
+          
+          
+            
+              <h2>Content Management</h2>
+              <div class="subcategory">
+              
+              
+                <h3>Setup</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-55-button" class="toggle" onclick="javascript:toggleOutput('output-box-55')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-55')">Populate registry with test config blob</h4>
+                        <br>
+                        <div id="output-box-55" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.658186 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:26.6577789-07:00
+TIME DURATION: 31.1981ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/e97313b6-a37d-454f-bf2c-00aa60a0865a
+	Server: Cowboy
+	X-Request-Id: Fq8DfVjjO2AVjFQAAAFD
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:26.688790 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/e97313b6-a37d-454f-bf2c-00aa60a0865a?digest=sha256%3Ac6726df92a90b6dac2be4e8c734346eba28adcf0fbc738efdd0898f3a82af3bb  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 144
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+ewoJImF1dGhvciI6ICJUR0tVNEV4RjNPWTF3dFNwIiwKCSJhcmNoaXRlY3R1cmUiOiAiYW1kNjQiLAoJIm9zIjogImxpbnV4IiwKCSJjb25maWciOiB7fSwKCSJyb290ZnMiOiB7CgkJInR5cGUiOiAibGF5ZXJzIiwKCQkiZGlmZl9pZHMiOiBbXQoJfQp9
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.68845-07:00
+TIME DURATION: 30.116ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3Ac6726df92a90b6dac2be4e8c734346eba28adcf0fbc738efdd0898f3a82af3bb
+	Server: Cowboy
+	X-Request-Id: Fq8DfVq7GdBaYc4AAAHH
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-56-button" class="toggle" onclick="javascript:toggleOutput('output-box-56')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-56')">Populate registry with test layer</h4>
+                        <br>
+                        <div id="output-box-56" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.716889 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+POST  /v2/myorg/myrepo/blobs/uploads/  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 202 Accepted
+RECEIVED AT  : 2021-10-17T20:50:26.716595-07:00
+TIME DURATION: 27.7016ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 18
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Location: /v2/myorg/myrepo/blobs/uploads/d28d91f4-9f93-4691-a2f0-b44a1e7b60fb
+	Server: Cowboy
+	X-Request-Id: Fq8DfVxof5iWR_EAAAHn
+BODY         :
+{
+   &#34;type&#34;: &#34;chunked&#34;
+}
+==============================================================================
+
+2021/10/17 20:50:26.747875 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/blobs/uploads/d28d91f4-9f93-4691-a2f0-b44a1e7b60fb?digest=sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Content-Length: 168
+	Content-Type: application/octet-stream
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+H4sIAAAAAAAAA&#43;3OQQrCMBCF4a49xXgBSUnaHMCTRBptQRNpp6i3t0UEV7oqIv7fYgbmzeJpHHSjVy0WZCa1c/MufWVe94N3RWlrZ72x3k/30nhbFWKWLPU0Dhp6keJ8im//PuU/6pZH2WVtYx8b0Sz7LjWSR5VLG6YRBumSzOlGtjkd&#43;qDjMWiX07Befbs7AAAAAAAAAAAAAAAAAPyzO34MnqoAKAAA
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.747539-07:00
+TIME DURATION: 30.5757ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Location: /v2/myorg/myrepo/blobs/sha256%3A48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183
+	Server: Cowboy
+	X-Request-Id: Fq8DfV5CJ3SjtZsAAAah
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-57-button" class="toggle" onclick="javascript:toggleOutput('output-box-57')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-57')">Populate registry with test tag</h4>
+                        <br>
+                        <div id="output-box-57" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.778581 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+PUT  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	Accept: application/vnd.oci.image.manifest.v1&#43;json
+	Content-Type: application/vnd.oci.image.manifest.v1&#43;json
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+&#34;ewoJInNjaGVtYVZlcnNpb24iOiAyLAoJImNvbmZpZyI6IHsKCQkibWVkaWFUeXBlIjogImFwcGxpY2F0aW9uL3ZuZC5vY2kuaW1hZ2UuY29uZmlnLnYxK2pzb24iLAoJCSJkaWdlc3QiOiAic2hhMjU2OmM2NzI2ZGY5MmE5MGI2ZGFjMmJlNGU4YzczNDM0NmViYTI4YWRjZjBmYmM3MzhlZmRkMDg5OGYzYTgyYWYzYmIiLAoJCSJzaXplIjogMTQ0Cgl9LAoJImxheWVycyI6IFsKCQl7CgkJCSJtZWRpYVR5cGUiOiAiYXBwbGljYXRpb24vdm5kLm9jaS5pbWFnZS5sYXllci52MS50YXIrZ3ppcCIsCgkJCSJkaWdlc3QiOiAic2hhMjU2OjQ4YWNmZjFkOTE3NTJlOTU3NTI3YzFiNTQxNmU3Mzc2ZDkxMGJjYWNmMDFiOTQ0MTE3NWY4YzI3MGUzNWMxODMiLAoJCQkic2l6ZSI6IDE2OAoJCX0KCV0KfQ==&#34;
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 201 Created
+RECEIVED AT  : 2021-10-17T20:50:26.7782255-07:00
+TIME DURATION: 30.1946ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Location: /v2/myorg/myrepo/manifests/tagtest0
+	Manifest-Digest: sha256:2f11115e9f99f925560a0e958f550bcfd2aa2f62f76b3419f53f6426e2023daf
+	Server: Cowboy
+	X-Request-Id: Fq8DfWAHCiA1JvIAAAFj
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-58-button" class="toggle" onclick="javascript:toggleOutput('output-box-58')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-58')">Check how many tags there are before anything gets deleted</h4>
+                        <br>
+                        <div id="output-box-58" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.806676 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.8063013-07:00
+TIME DURATION: 27.6242ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 82
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWG9AgznEVQAAAGE
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;,
+      &#34;test1&#34;,
+      &#34;test2&#34;,
+      &#34;test3&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Manifest delete</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-59-button" class="toggle" onclick="javascript:toggleOutput('output-box-59')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-59')">DELETE request to manifest tag should return 202, unless tag deletion is disallowed (400/405)</h4>
+                        <br>
+                        <div id="output-box-59" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.836154 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/manifests/tagtest0  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.8358974-07:00
+TIME DURATION: 29.068ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWOIsCwsEh0AAAbB
+BODY         :
+
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-60-button" class="toggle" onclick="javascript:toggleOutput('output-box-60')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-60')">DELETE request to manifest (digest) should yield 202 response unless already deleted</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-60" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:26.873402 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/manifests/sha256:2f11115e9f99f925560a0e958f550bcfd2aa2f62f76b3419f53f6426e2023daf  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.873075-07:00
+TIME DURATION: 36.8082ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWW4mhD_TToAAAGk
+BODY         :
+
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;int&gt;: 405
+To satisfy at least one of these matchers: [%!s(*matchers.EqualMatcher=&amp;{202}) %!s(*matchers.EqualMatcher=&amp;{404})]</pre>
+                        <br>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result green">
+                        <div id="output-box-61-button" class="toggle" onclick="javascript:toggleOutput('output-box-61')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-61')">GET request to deleted manifest URL should yield 404 response, unless delete is disallowed</h4>
+                        <br>
+                        <div id="output-box-61" style="display: none;">
+                          <pre class="pre-box">2021/10/17 20:50:26.910538 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/manifests/sha256:2f11115e9f99f925560a0e958f550bcfd2aa2f62f76b3419f53f6426e2023daf  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.9100017-07:00
+TIME DURATION: 36.0365ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 357
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWfgSOy1KKMAAALl
+BODY         :
+{
+   &#34;manifest&#34;: {
+      &#34;config&#34;: {
+         &#34;digest&#34;: &#34;sha256:c6726df92a90b6dac2be4e8c734346eba28adcf0fbc738efdd0898f3a82af3bb&#34;,
+         &#34;mediaType&#34;: &#34;application/vnd.oci.image.config.v1&#43;json&#34;,
+         &#34;size&#34;: 144
+      },
+      &#34;layers&#34;: [
+         {
+            &#34;digest&#34;: &#34;sha256:48acff1d91752e957527c1b5416e7376d910bcacf01b9441175f8c270e35c183&#34;,
+            &#34;mediaType&#34;: &#34;application/vnd.oci.image.layer.v1.tar&#43;gzip&#34;,
+            &#34;size&#34;: 168
+         }
+      ],
+      &#34;schemaVersion&#34;: 2
+   }
+}
+==============================================================================
+
+</pre>
+                        </div>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-62-button" class="toggle" onclick="javascript:toggleOutput('output-box-62')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-62')">GET request to tags list should reflect manifest deletion</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-62" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:26.940019 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/tags/list  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:26.9396521-07:00
+TIME DURATION: 28.955ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 82
+	Content-Type: application/json; charset=utf-8
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWm2PrBtlCsAAAGD
+BODY         :
+{
+   &#34;name&#34;: &#34;myrepo&#34;,
+   &#34;tags&#34;: [
+      &#34;emptylayer&#34;,
+      &#34;tagtest0&#34;,
+      &#34;test0&#34;,
+      &#34;test1&#34;,
+      &#34;test2&#34;,
+      &#34;test3&#34;
+   ]
+}
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;int&gt;: 6
+to be &lt;
+    &lt;int&gt;: 6</pre>
+                        <br>
+                      </div>
+                    
+                  <br>
+                
+              
+                <h3>Blob delete</h3>
+                
+                
+                  
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-63-button" class="toggle" onclick="javascript:toggleOutput('output-box-63')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-63')">DELETE request to blob URL should yield 202 response</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-63" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:26.971424 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+DELETE  /v2/myorg/myrepo/blobs/sha256:c6726df92a90b6dac2be4e8c734346eba28adcf0fbc738efdd0898f3a82af3bb  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 405 Method Not Allowed
+RECEIVED AT  : 2021-10-17T20:50:26.9711017-07:00
+TIME DURATION: 30.1613ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 0
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfWuVy4jP11YAAAMF
+BODY         :
+
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;int&gt;: 405
+to equal
+    &lt;int&gt;: 202</pre>
+                        <br>
+                      </div>
+                    
+                  
+                    
+                    
+                      <div class="result red">
+                        <div id="output-box-64-button" class="toggle" onclick="javascript:toggleOutput('output-box-64')">+</div>
+                        <h4 style="display: inline;" onclick="javascript:toggleOutput('output-box-64')">GET request to deleted blob URL should yield 404 response</h4>
+                        <br>
+                        <div>
+                          <div id="output-box-64" style="display: none;">
+                            <pre class="pre-box">2021/10/17 20:50:27.003126 DEBUG 
+==============================================================================
+~~~ REQUEST ~~~
+GET  /v2/myorg/myrepo/blobs/sha256:c6726df92a90b6dac2be4e8c734346eba28adcf0fbc738efdd0898f3a82af3bb  HTTP/1.1
+HOST   : localhost:4000
+HEADERS:
+	User-Agent: distribution-spec-conformance-tests
+BODY   :
+***** NO CONTENT *****
+------------------------------------------------------------------------------
+~~~ RESPONSE ~~~
+STATUS       : 200 OK
+RECEIVED AT  : 2021-10-17T20:50:27.0027272-07:00
+TIME DURATION: 30.5326ms
+HEADERS      :
+	Cache-Control: max-age=0, private, must-revalidate
+	Content-Length: 144
+	Date: Mon, 18 Oct 2021 03:50:26 GMT
+	Server: Cowboy
+	X-Request-Id: Fq8DfW115Jxxu0AAAAKG
+BODY         :
+{
+	&#34;author&#34;: &#34;TGKU4ExF3OY1wtSp&#34;,
+	&#34;architecture&#34;: &#34;amd64&#34;,
+	&#34;os&#34;: &#34;linux&#34;,
+	&#34;config&#34;: {},
+	&#34;rootfs&#34;: {
+		&#34;type&#34;: &#34;layers&#34;,
+		&#34;diff_ids&#34;: []
+	}
+}
+==============================================================================
+
+</pre>
+                          </div>
+                        </div>
+                        <pre class="fail-message">Expected
+    &lt;int&gt;: 200
+to equal
+    &lt;int&gt;: 404</pre>
+                        <br>
+                      </div>
+                    
+                  <br>
+                
+              
+            
+          
+        </div>
+        
+      
+    </div>
+  </body>
+</html>
