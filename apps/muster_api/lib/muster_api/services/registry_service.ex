@@ -31,9 +31,9 @@ defmodule MusterApi.RegistryService do
     end
   end
 
-  def upload_manifest(namespace, name, reference, manifest) do
+  def upload_manifest(namespace, name, reference, manifest, manifest_digest) do
     repo = namespace<>name
-    with_repo repo, do: Muster.Registry.upload_manifest(repo, reference, manifest)
+    with_repo repo, do: Muster.Registry.upload_manifest(repo, reference, manifest, manifest_digest)
   end
 
   def get_blob(namespace, name, digest) do

@@ -1,5 +1,6 @@
 defmodule MusterApi.Router do
   use MusterApi, :router
+  alias MusterApi.Plug.DigestPlug
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -11,7 +12,6 @@ defmodule MusterApi.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-
   end
 
   scope "/v2", MusterApi do

@@ -1,5 +1,6 @@
 defmodule MusterApi.Endpoint do
   use Phoenix.Endpoint, otp_app: :muster_api
+  alias MusterApi.Plug.DigestPlug
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
@@ -44,7 +45,8 @@ defmodule MusterApi.Endpoint do
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
-    json_decoder: Phoenix.json_library()
+    json_decoder: Phoenix.json_library(),
+    body_reader: {DigestPlug, :read_body, []}
 
   plug Plug.MethodOverride
   plug Plug.Head

@@ -11,9 +11,10 @@ defmodule Muster.Repository do
       :ok,
       %{
         name: name,
-        uploads: %{},
-        layers: %{},
-        tags: %{}
+        uploads: %{}, # upload sessions
+        layers: %{}, # digest to layer blob
+        tags: %{}, # tag to manifest
+        manifests: %{}, # digest to tag, tag to tag -- single source of truth for manifest reference -> tag
       }
     }
   end
@@ -59,14 +60,15 @@ defmodule Muster.Repository do
     {:reply, %{location: location}, state}
   end
 
-  def handle_call({:upload_manifest, reference, %{layers: manifest_layers} = manifest}, _from, %{layers: layers = %{}, tags: tags = %{}} = state) do
+  def handle_call({:upload_manifest, reference, %{"layers" => manifest_layers} = manifest, manifest_digest}, _from, %{layers: layers = %{}, tags: tags = %{}, manifests: manifests = %{}} = state) do
     valid = manifest_layers
-    |> Enum.map(fn %{digest: digest} -> digest end)
+    |> Enum.map(fn %{"digest" => digest} -> digest end)
     |> Enum.all?(fn digest -> Map.has_key?(layers, digest) end)
     case valid do
       true ->
         tags = Map.put(tags, reference, manifest)
-        state = %{state | tags: tags}
+        manifests = Map.put(manifests, manifest_digest, reference) |> Map.put(reference, reference)
+        state = %{state | tags: tags, manifests: manifests}
         {:reply, {:ok, %{location: reference}}, state}
       false -> {:reply, {:error, :blob_unknown}, state}
     end
@@ -94,12 +96,15 @@ defmodule Muster.Repository do
     {:reply, exists?, state}
   end
 
-  def handle_call({:get_manifest, reference}, _from, %{tags: tags} = state) do
-    manifest = case Map.get(tags, reference) do
-      nil -> {:error, :not_found}
-      manifest -> {:ok, manifest}
-    end
-    {:reply, manifest, state}
+  def handle_call({:get_manifest, reference}, _from, %{tags: tags, manifests: by_reference = %{}} = state) do
+    reply = with {:ok, tag} <- Map.fetch(by_reference, reference),
+         {:ok, manifest} <- Map.fetch(tags, tag)
+         do
+          {:ok, manifest}
+         else
+          _err -> {:error, :not_found}
+         end
+    {:reply, reply, state}
   end
 
   def handle_call({:check_layer, digest}, _from, %{layers: layers} = state) do

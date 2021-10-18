@@ -55,9 +55,9 @@ defmodule Muster.Registry do
     GenServer.call({:complete_upload, location, digest, range, blob})
   end
 
-  def upload_manifest(repo_name, reference, %{} = manifest) do
+  def upload_manifest(repo_name, reference, %{} = manifest, manifest_digest) do
     repo_name |> repo_via |>
-    GenServer.call({:upload_manifest, reference, manifest})
+    GenServer.call({:upload_manifest, reference, manifest, manifest_digest})
   end
 
   def list_tags(repo_name, n \\ nil, last \\ nil) do

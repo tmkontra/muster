@@ -75,9 +75,18 @@ defmodule MusterApi.RegistryController do
     end
   end
 
-  def upload_manifest(conn, %{"namespace" => namespace, "name" => name, "reference" => reference} = _params) do
-    resp = MusterApi.RegistryService.upload_manifest(namespace, name, reference, %{})
-    render_json(conn, resp)
+  def upload_manifest(%{:body_params => manifest} = conn, %{"namespace" => namespace, "name" => name, "reference" => reference} = _params) do
+    digests = conn.assigns.digests
+    case MusterApi.RegistryService.upload_manifest(namespace, name, reference, manifest, digests) do
+      {:ok, %{location: location}} ->
+        location = MusterApi.Router.Helpers.registry_path(conn, :get_manifest, namespace, name, location)
+        conn
+        |> put_resp_header("Location", location)
+        |> put_resp_header("Manifest-Digest", digests)
+        |> send_resp(201, "")
+      _ -> conn |> send_resp(400, "")
+    end
+
   end
 
   def get_blob(conn, %{"namespace" => namespace, "name" => name, "digest" => digest} = _params) do
@@ -97,7 +106,7 @@ defmodule MusterApi.RegistryController do
   def get_manifest(conn, %{"namespace" => namespace, "name" => name, "reference" => reference} = _params) do
     case MusterApi.RegistryService.get_manifest(namespace, name, reference) do
       {:error, :not_found} -> conn |> not_found
-      manifest -> render_json(conn, %{manifest: manifest})
+      {:ok, manifest} -> render_json(conn, %{manifest: manifest})
     end
   end
 
