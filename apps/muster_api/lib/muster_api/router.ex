@@ -1,6 +1,5 @@
 defmodule MusterApi.Router do
   use MusterApi, :router
-  alias MusterApi.Plug.DigestPlug
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -32,6 +31,8 @@ defmodule MusterApi.Router do
 
       head "/manifests/:reference", RegistryController, :manifest_exists?
       get "/manifests/:reference", RegistryController, :get_manifest
+
+      get "/tags/list", RegistryController, :list_tags
 
       delete "/*any_match", RegistryController, :method_not_allowed
 

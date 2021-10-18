@@ -29,6 +29,14 @@ defmodule MusterApi.RegistryControllerTest do
     namespace = random_string(16)
     name = random_string(22)
     reference = random_string(18)
-    conn = get(conn, "/v2/#{namespace}/#{name}/manfiests/#{reference}")
+    conn = get(conn, "/v2/#{namespace}/#{name}/manifests/#{reference}")
+  end
+
+  test "HEAD request to manifest path (tag) should yield 200 response", %{conn: conn} do
+    namespace = random_string(16)
+    name = random_string(22)
+    reference = upload_manifest(namespace, name)
+    conn = head(conn, "/v2/#{namespace}/#{name}/manifests/#{reference}")
+    _ = response(conn, 200)
   end
 end

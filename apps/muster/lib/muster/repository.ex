@@ -91,8 +91,8 @@ defmodule Muster.Repository do
     {:reply, tags, state}
   end
 
-  def handle_call({:check_manifest, reference}, _from, %{tags: tags} = state) do
-    exists? = Map.has_key?(tags, reference)
+  def handle_call({:check_manifest, reference}, _from, %{tags: tags, manifests: by_reference = %{}} = state) do
+    exists? = Map.has_key?(by_reference, reference)
     {:reply, exists?, state}
   end
 

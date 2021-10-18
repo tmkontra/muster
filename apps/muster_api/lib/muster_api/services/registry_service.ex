@@ -57,4 +57,9 @@ defmodule MusterApi.RegistryService do
     repo = namespace <> name
     with_repo repo, do: Muster.Registry.manifest_exists?(repo, reference)
   end
+
+  def list_tags(namespace, name, n \\ nil, last \\ nil) do
+    repo = namespace <> name
+    with_repo repo, do: Muster.Registry.list_tags(repo, n, last)
+  end
 end

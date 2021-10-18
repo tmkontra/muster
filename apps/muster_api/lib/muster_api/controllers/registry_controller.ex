@@ -117,6 +117,25 @@ defmodule MusterApi.RegistryController do
     end
   end
 
+  def list_tags(conn, %{"namespace" => namespace, "name" => name} = params) do
+    {:ok, n} = Map.get(params, "n") |> optional_int()
+    last = Map.get(params, "last")
+    case MusterApi.RegistryService.list_tags(namespace, name, n, last) do
+      tags -> conn |> render("tags.json", name: name, tags: tags)
+    end
+  end
+
+  defp optional_int(optional_param) do
+    case optional_param do
+      n when is_binary(n) ->
+        case Integer.parse(n) do
+          :error -> {:error, nil}
+          {int, _} -> {:ok, int}
+        end
+      nil -> {:ok, nil}
+    end
+  end
+
   def default_route(conn, %{"any_match" => _matched}) do
     conn |> send_resp(501, "")
   end
