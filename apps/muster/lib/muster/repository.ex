@@ -2,6 +2,11 @@ defmodule Muster.Repository do
   use GenServer, restart: :temporary
   require Logger
 
+  defmodule RepositoryState do
+    defstruct ~w[name uploads layers tags]a
+  end
+
+  @spec create([...]) :: :ignore | {:error, any} | {:ok, pid}
   def create([name, id]) do
     GenServer.start_link(__MODULE__, name, name: id)
   end
@@ -162,8 +167,8 @@ defmodule Muster.Repository do
       [] when range_start == 0 -> [{range_end, blob}]
       chunks = [{prev_end, _blob} | _tail = []] when prev_end + 1 == range_start -> [{range_end, blob} | chunks]
       chunks = [{prev_end, blob} | _tail] when prev_end + 1 == range_start -> [{range_end, blob} | chunks]
-      invalid ->
-        Logger.warn("Got invalid chunk sequence for range '#{range_start}-#{range_end}': #{invalid}")
+      _ ->
+        Logger.warn("Got invalid chunk sequence for range '#{range_start}-#{range_end}'")
         :error
     end
     case chunks do
