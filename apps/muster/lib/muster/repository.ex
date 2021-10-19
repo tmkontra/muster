@@ -1,9 +1,11 @@
 defmodule Muster.Repository do
   use GenServer, restart: :temporary
   require Logger
+  alias Muster.Model.{MonolithicUploadRequest, ChunkedUploadRequest, CompleteUploadRequest, ManifestUploadRequest, ListTagsRequest}
 
   defmodule RepositoryState do
-    defstruct ~w[name uploads layers tags]a
+    @enforce_keys [:name, :uploads, :layers, :tags, :manifests]
+    defstruct ~w[name uploads layers tags manifests]a
   end
 
   @spec create([...]) :: :ignore | {:error, any} | {:ok, pid}
@@ -14,7 +16,7 @@ defmodule Muster.Repository do
   def init(name) do
     {
       :ok,
-      %{
+      %RepositoryState{
         name: name,
         uploads: %{}, # upload sessions
         layers: %{}, # digest to layer blob
@@ -43,45 +45,46 @@ defmodule Muster.Repository do
     {:reply, %{location: location}, state}
   end
 
-  def handle_call({:upload_monolithic, upload_id, digest, blob}, _from, state) do
+  def handle_call({:upload_monolithic, %MonolithicUploadRequest{upload_id: upload_id, digest: digest, blob: blob}}, _from, state) do
     {:ok, blob_location, state} = upload_layer_monolithic(upload_id, digest, blob, state)
     {:reply, %{location: blob_location}, state}
   end
 
-  def handle_call({:upload_chunk, upload_id, {range_start, range_end}, blob}, _from, state) do
+  def handle_call({:upload_chunk, %ChunkedUploadRequest{upload_id: upload_id, range: {range_start, range_end}, blob: blob}}, _from, state) do
     case upload_layer_chunk(upload_id, range_start, range_end, blob, state) do
       {:ok, state} -> {:reply, %{location: upload_id}, state}
       {:error, cause, state} -> {:reply, {:error, cause}, state}
     end
   end
 
-  def handle_call({:complete_upload, location, digest}, _from, state) do
-    {:ok, location, state} = finish_upload_session(location, digest, nil, state)
-    {:reply, %{location: location}, state}
-  end
-
-  def handle_call({:complete_upload, location, digest, {_range_start, _range_end} = range, blob}, _from, state) do
+  # complete upload with final layer
+  def handle_call({:complete_upload, %CompleteUploadRequest{upload_id: location, digest: digest, range: range = {_range_start, _range_end}, blob: blob}}, _from, state) do
     {:ok, location, state} = finish_upload_session(location, digest, {range, blob}, state)
     {:reply, %{location: location}, state}
   end
 
-  def handle_call({:upload_manifest, reference, %{"layers" => manifest_layers} = manifest, manifest_digest}, _from, %{layers: layers = %{}, tags: tags = %{}, manifests: manifests = %{}} = state) do
+  def handle_call({:complete_upload, %CompleteUploadRequest{upload_id: location, digest: digest, range: nil, blob: nil}}, _from, state) do
+    {:ok, location, state} = finish_upload_session(location, digest, nil, state)
+    {:reply, %{location: location}, state}
+  end
+
+  def handle_call({:upload_manifest, %ManifestUploadRequest{reference: reference, manifest: %{"layers" => manifest_layers} = manifest, manifest_digest: manifest_digest}}, _from, %RepositoryState{} = state) do
     valid = manifest_layers
     |> Enum.map(fn %{"digest" => digest} -> digest end)
-    |> Enum.all?(fn digest -> Map.has_key?(layers, digest) end)
+    |> Enum.all?(fn digest -> Map.has_key?(state.layers, digest) end)
     case valid do
       true ->
-        tags = Map.put(tags, reference, manifest)
-        manifests = Map.put(manifests, manifest_digest, reference) |> Map.put(reference, reference)
+        tags = Map.put(state.tags, reference, manifest)
+        manifests = Map.put(state.manifests, manifest_digest, reference) |> Map.put(reference, reference)
         state = %{state | tags: tags, manifests: manifests}
         {:reply, {:ok, %{location: reference}}, state}
       false -> {:reply, {:error, :blob_unknown}, state}
     end
   end
 
-  def handle_call({:list_tags, query}, _from, %{tags: tags} = state) do
-    all_tags = Map.keys(tags) |> Enum.sort()
-    tags = case query do
+  def handle_call({:list_tags, %ListTagsRequest{} = query}, _from, %RepositoryState{} = state) do
+    all_tags = Map.keys(state.tags) |> Enum.sort()
+    tags = case query |> ListTagsRequest.tuple do
       {nil, nil} ->
         all_tags
       {0, nil} ->
@@ -96,7 +99,7 @@ defmodule Muster.Repository do
     {:reply, tags, state}
   end
 
-  def handle_call({:check_manifest, reference}, _from, %{tags: tags, manifests: by_reference = %{}} = state) do
+  def handle_call({:check_manifest, reference}, _from, %RepositoryState{manifests: by_reference} = state) do
     exists? = Map.has_key?(by_reference, reference)
     {:reply, exists?, state}
   end
@@ -177,20 +180,18 @@ defmodule Muster.Repository do
     end
   end
 
-  defp finish_upload_session(upload_id, digest, maybe_content, %{uploads: uploads} = state) do
-    with {:ok, {:started, _chunks}} <- Map.fetch(uploads, upload_id)
-    do
-      {:ok, state} = case maybe_content do
-        nil -> {:ok, state}
-        {{range_start, range_end}, blob} -> upload_layer_chunk(upload_id, range_start, range_end, blob, state)
-      end
-      %{uploads: uploads, layers: layers} = state
-      {:started, chunks} = Map.fetch!(uploads, upload_id)
-      layers = put_layer(digest, chunks, layers)
-      uploads = Map.put(uploads, upload_id, {:completed, []})
-      {:ok, digest, %{state | layers: layers, uploads: uploads}}
-    else error ->
-      {:error, error}
+  defp finish_upload_session(upload_id, digest, maybe_content, %RepositoryState{} = state) do
+    case Map.fetch(state.uploads, upload_id) do
+      {:ok, {:started, _chunks}} ->
+        {:ok, state} = case maybe_content do
+          nil -> {:ok, state}
+          {{range_start, range_end}, blob} -> upload_layer_chunk(upload_id, range_start, range_end, blob, state)
+        end
+        {:started, chunks} = Map.fetch!(state.uploads, upload_id)
+        layers = put_layer(digest, chunks, state.layers)
+        uploads = Map.put(state.uploads, upload_id, {:completed, []})
+        {:ok, digest, %{state | layers: layers, uploads: uploads}}
+      error -> {:error, error}
     end
   end
 
