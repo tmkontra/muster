@@ -45,7 +45,7 @@ defmodule MusterApi.RegistryService do
 
   def blob_exists?(namespace, name, digest) do
     repo = namespace <> name
-    with_repo(repo, &Muster.Repository.blob_exists?(&1, digest))
+    with_repo(repo, &Muster.Repository.layer_exists?(&1, digest))
   end
 
   def get_manifest(namespace, name, reference) do
