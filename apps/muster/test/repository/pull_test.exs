@@ -25,7 +25,7 @@ defmodule PullTest do
     repo = UUID.uuid4()
     {:ok, repo} = Muster.Repository.create(repo)
     reference = upload_manifest(repo)
-    {:ok, %{} = manifest} = Muster.Repository.get_manifest(repo, reference)
+    {:ok, %{}} = Muster.Repository.get_manifest(repo, reference)
   end
 
   test "layer_exists? not found" do

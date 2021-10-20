@@ -7,7 +7,7 @@ defmodule PushTest do
     {:ok, repo} = Muster.Repository.create(repo)
     %{location: location} = Muster.Repository.start_upload_monolithic(repo)
 
-    %{location: location} =
+    %{location: _} =
       Muster.Repository.monolithic_upload(repo, location, "abc123", <<1, 2, 3>>)
   end
 
@@ -26,17 +26,15 @@ defmodule PushTest do
     %{location: location} = Muster.Repository.start_upload_chunked(repo)
     %{location: location} = Muster.Repository.chunk_upload(repo, location, {0, 3}, <<1, 2, 3>>)
     %{location: location} = Muster.Repository.chunk_upload(repo, location, {4, 7}, <<1, 2, 3>>)
-    %{location: location} = Muster.Repository.complete_upload(repo, location, "123456")
+    %{location: _} = Muster.Repository.complete_upload(repo, location, "123456")
   end
 
   test "upload chunked layer, finalize with chunk" do
-    digest = "123456"
     repo = UUID.uuid4()
-    {:ok, repo} = Muster.Repository.create(repo)
+    {:ok, _} = Muster.Repository.create(repo)
   end
 
   test "upload chunked layer, illegal sequence" do
-    digest = "123456"
     repo = UUID.uuid4()
     {:ok, repo} = Muster.Repository.create(repo)
     %{location: location} = Muster.Repository.start_upload_chunked(repo)
@@ -47,15 +45,15 @@ defmodule PushTest do
   end
 
   test "upload manifest should error for non-existent layer" do
-    digest = "123456"
     repo = UUID.uuid4()
+    digest = random_string(12)
     manifest_digest = UUID.uuid4()
     {:ok, repo} = Muster.Repository.create(repo)
     %{location: location} = Muster.Repository.start_upload_chunked(repo)
     %{location: location} = Muster.Repository.chunk_upload(repo, location, {0, 3}, <<1, 2, 3>>)
     %{location: location} = Muster.Repository.chunk_upload(repo, location, {4, 7}, <<1, 2, 3>>)
 
-    %{location: location} =
+    %{location: _} =
       Muster.Repository.complete_upload(repo, location, digest, {8, 11}, <<1, 2, 3>>)
 
     {:error, :blob_unknown} =
@@ -80,7 +78,7 @@ defmodule PushTest do
 
     tag = "abc1234"
 
-    {:ok, %{location: location}} =
+    {:ok, %{location: _}} =
       Muster.Repository.upload_manifest(repo, tag, manifest, UUID.uuid4())
 
     [^tag] = Muster.Repository.list_tags(repo)
