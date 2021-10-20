@@ -6,6 +6,7 @@ defmodule MusterApi.RepoService do
 
   def with_repo(repo, func) when is_function(func) do
     via = repo |> Muster.Registry.repo_via()
+
     try do
       func.(via)
     catch
