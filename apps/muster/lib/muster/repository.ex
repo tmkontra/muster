@@ -1,5 +1,11 @@
 defmodule Muster.Repository do
-  alias Muster.Model.{MonolithicUploadRequest, ChunkedUploadRequest, CompleteUploadRequest, ManifestUploadRequest, ListTagsRequest}
+  alias Muster.Model.{
+    MonolithicUploadRequest,
+    ChunkedUploadRequest,
+    CompleteUploadRequest,
+    ManifestUploadRequest,
+    ListTagsRequest
+  }
 
   @spec create(any, atom | {:global, any} | {:via, atom, any}) ::
           :ignore | {:error, any} | {:ok, pid}
@@ -22,25 +28,47 @@ defmodule Muster.Repository do
   end
 
   def monolithic_upload(repo, location, digest, blob) do
-    GenServer.call(repo, {:upload_monolithic, %MonolithicUploadRequest{upload_id: location, digest: digest, blob: blob}})
+    GenServer.call(
+      repo,
+      {:upload_monolithic,
+       %MonolithicUploadRequest{upload_id: location, digest: digest, blob: blob}}
+    )
   end
 
   def chunk_upload(repo, location, range, blob) do
-    GenServer.call(repo, {:upload_chunk, %ChunkedUploadRequest{upload_id: location, range: range, blob: blob}})
+    GenServer.call(
+      repo,
+      {:upload_chunk, %ChunkedUploadRequest{upload_id: location, range: range, blob: blob}}
+    )
   end
 
   # Final PUT to close upload session
   def complete_upload(repo, location, digest) do
-    GenServer.call(repo, {:complete_upload, %CompleteUploadRequest{upload_id: location, digest: digest}})
+    GenServer.call(
+      repo,
+      {:complete_upload, %CompleteUploadRequest{upload_id: location, digest: digest}}
+    )
   end
 
   # Final PUT to close upload session with final chunk
   def complete_upload(repo, location, digest, range, blob) do
-    GenServer.call(repo, {:complete_upload, %CompleteUploadRequest{upload_id: location, digest: digest, range: range, blob: blob}})
+    GenServer.call(
+      repo,
+      {:complete_upload,
+       %CompleteUploadRequest{upload_id: location, digest: digest, range: range, blob: blob}}
+    )
   end
 
   def upload_manifest(repo, reference, %{} = manifest, manifest_digest) do
-    GenServer.call(repo, {:upload_manifest, %ManifestUploadRequest{reference: reference, manifest: manifest, manifest_digest: manifest_digest}})
+    GenServer.call(
+      repo,
+      {:upload_manifest,
+       %ManifestUploadRequest{
+         reference: reference,
+         manifest: manifest,
+         manifest_digest: manifest_digest
+       }}
+    )
   end
 
   def list_tags(repo, n \\ nil, last \\ nil) do

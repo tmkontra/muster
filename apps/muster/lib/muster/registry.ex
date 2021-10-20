@@ -9,10 +9,12 @@ defmodule Muster.Registry do
   @spec start_repo(any) :: :ignore | {:error, any} | {:ok, pid} | {:ok, pid, any}
   def start_repo(name) do
     repo_id = name |> repo_via()
+
     spec = %{
       id: Muster.Repository,
       start: {Muster.Repository, :create, [name, repo_id]}
     }
+
     DynamicSupervisor.start_child(__MODULE__, spec)
   end
 
