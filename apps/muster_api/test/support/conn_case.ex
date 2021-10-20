@@ -16,7 +16,7 @@ defmodule MusterApi.ConnCase do
   """
 
   use ExUnit.CaseTemplate
-  use MusterApi, :service
+  import MusterApi.RepoService
 
   using do
     quote do
@@ -34,7 +34,7 @@ defmodule MusterApi.ConnCase do
 
       def upload_manifest(namespace, name) do
         repo = namespace<>name
-        with_repo repo do
+        with_repo repo, fn repo ->
           layer_digest = upload_layer(repo)
           manifest = %{
             "layers" => [
@@ -42,7 +42,7 @@ defmodule MusterApi.ConnCase do
             ]
           }
           manifest_ref = UUID.uuid4()
-          {:ok, %{location: location}} = Muster.Registry.upload_manifest(repo, manifest_ref, manifest, UUID.uuid4())
+          {:ok, %{location: location}} = Muster.Repository.upload_manifest(repo, manifest_ref, manifest, UUID.uuid4())
           location
         end
       end
@@ -50,10 +50,10 @@ defmodule MusterApi.ConnCase do
       def upload_layer(repo) do
         digest = UUID.uuid4()
         tag = UUID.uuid4()
-        %{location: location} = Muster.Registry.start_upload_chunked(repo)
-        %{location: location} = Muster.Registry.chunk_upload(repo, location, {0, 3}, <<1, 2, 3>>)
-        %{location: location} = Muster.Registry.chunk_upload(repo, location, {4, 7}, <<1, 2, 3>>)
-        %{location: location} = Muster.Registry.complete_upload(repo, location, digest, {8, 11}, <<1, 2, 3>>)
+        %{location: location} = Muster.Repository.start_upload_chunked(repo)
+        %{location: location} = Muster.Repository.chunk_upload(repo, location, {0, 3}, <<1, 2, 3>>)
+        %{location: location} = Muster.Repository.chunk_upload(repo, location, {4, 7}, <<1, 2, 3>>)
+        %{location: location} = Muster.Repository.complete_upload(repo, location, digest, {8, 11}, <<1, 2, 3>>)
         digest
       end
     end
