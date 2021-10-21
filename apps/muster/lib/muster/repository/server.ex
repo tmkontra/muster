@@ -13,14 +13,7 @@ defmodule Muster.Repository.Server do
 
   @impl GenServer
   @spec init(any) ::
-          {:ok,
-           %Muster.Repository.Impl{
-             layers: %{},
-             manifests: %{},
-             name: any,
-             tags: %{},
-             uploads: %{}
-           }}
+          {:ok, Muster.Repository.Impl.t()}
   def init(name) do
     {
       :ok,
@@ -73,6 +66,23 @@ defmodule Muster.Repository.Server do
     case Repository.Impl.upload_layer_chunk(upload_id, range_start, range_end, blob, state) do
       {:ok, state} -> {:reply, %{location: upload_id}, state}
       {:error, cause} -> {:reply, {:error, cause}, state}
+    end
+  end
+
+  @impl GenServer
+  def handle_call(
+        {:upload_stream,
+         %ChunkedUploadRequest{upload_id: upload_id, range: nil, blob: blob}},
+        _from,
+        state
+      ) do
+    case Repository.Impl.upload_layer_stream(upload_id, blob, state) do
+      {:ok, range, state} ->
+        Logger.debug("Successfully streamed chunk to #{upload_id}")
+        {:reply, %{location: upload_id, range: range}, state}
+      {:error, cause} ->
+        Logger.debug("Error streaming chunk to #{upload_id}: #{cause}")
+        {:reply, {:error, cause}, state}
     end
   end
 
@@ -178,19 +188,14 @@ defmodule Muster.Repository.Server do
   end
 
   @impl GenServer
-  def handle_call({:check_layer, digest}, _from, %{layers: layers} = state) do
-    exists? = Map.has_key?(layers, digest)
+  def handle_call({:check_layer, digest}, _from, state) do
+    exists? = Repository.Impl.check_layer(digest, state)
     {:reply, exists?, state}
   end
 
   @impl GenServer
-  def handle_call({:get_layer, digest}, _from, %{layers: layers} = state) do
-    resp =
-      case Map.get(layers, digest) do
-        nil -> {:error, :not_found}
-        blob -> {:ok, blob}
-      end
-
+  def handle_call({:get_layer, digest}, _from, state) do
+    resp = Repository.Impl.get_layer(digest, state)
     {:reply, resp, state}
   end
 end

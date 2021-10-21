@@ -35,6 +35,10 @@ defmodule Muster.Repository do
     )
   end
 
+  def chunk_upload(repo, location, range, blob) when is_nil(range) do
+    GenServer.call(repo, {:upload_stream, %ChunkedUploadRequest{upload_id: location, range: nil, blob: blob}})
+  end
+
   def chunk_upload(repo, location, range, blob) do
     GenServer.call(
       repo,

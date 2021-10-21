@@ -12,7 +12,7 @@ import Config
 
 # Configures the muster core
 config :muster,
-  speed_limit: 5
+  key: "value"
 
 config :muster_api,
   generators: [context_app: false]
@@ -35,6 +35,7 @@ config :muster_api, MusterApi.Endpoint,
 
 # Configures Elixir's Logger
 config :logger, :console,
+  level: :debug,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 

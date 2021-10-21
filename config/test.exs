@@ -5,3 +5,6 @@ use Mix.Config
 config :muster_api, MusterApi.Endpoint,
   http: [port: 4002],
   server: false
+
+  config :muster,
+    storage_root: "muster_store_test"

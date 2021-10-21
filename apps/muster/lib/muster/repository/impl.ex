@@ -1,19 +1,25 @@
 defmodule Muster.Repository.Impl do
+  alias Muster.Storage
   require Logger
 
   @enforce_keys [:name, :uploads, :layers, :tags, :manifests]
   defstruct ~w[name uploads layers tags manifests]a
 
+  @type t :: %__MODULE__{name: String.t(), uploads: map(), layers: MapSet.t(), tags: map(), manifests: map()}
+
+  @namespace "all"
+
+  @spec new(any) :: Muster.Repository.Impl.t()
   def new(name) do
     %__MODULE__{
       name: name,
       # upload sessions
       uploads: %{},
       # digest to layer blob
-      layers: %{},
+      layers: MapSet.new(),
       # tag to manifest
       tags: %{},
-      # digest to tag, tag to tag -- single source of truth for manifest reference -> tag
+      # digest -> tag (union) tag -> tag -- single source of truth for manifest reference -> tag
       manifests: %{}
     }
   end
@@ -38,7 +44,7 @@ defmodule Muster.Repository.Impl do
         %__MODULE__{uploads: uploads, layers: layers} = state
       ) do
     with {:ok, {:started, _any}} <- Map.fetch(uploads, upload_id) do
-      layers = Map.put(layers, digest, blob)
+      put_layer(digest, blob, layers, state.name)
       uploads = Map.put(uploads, upload_id, {:completed, []})
       state = %{state | layers: layers, uploads: uploads}
       {:ok, digest, state}
@@ -67,17 +73,45 @@ defmodule Muster.Repository.Impl do
     end
   end
 
+  def upload_layer_stream(
+    upload_id, blob, %__MODULE__{uploads: uploads} = state
+  ) do
+    Logger.debug("Streaming layer chunk for #{upload_id}")
+    with {:ok, {:started, chunks}} when is_list(chunks) <- Map.fetch(uploads, upload_id)
+         do
+          range_end = case chunks do
+            [prev | []] ->
+              {{_, prev_end}, _} = prev
+              prev_end
+            [prev | [_]] ->
+              {{_, prev_end}, _} = prev
+              prev_end
+            [] ->
+              0
+          end
+          range = range_end + byte_size(blob)
+          chunks = [{{nil, range}, blob} | chunks]
+          uploads = Map.put(uploads, upload_id, {:started, chunks})
+          state = %{state | uploads: uploads}
+          {:ok, range, state}
+    else
+      {:ok, {:started, nil}} -> {:error, :monolithic_only}
+      {:error, cause} -> {:error, cause}
+      error -> {:error, error}
+    end
+  end
+
   defp verify_chunk_order(chunks, range_start, range_end, blob) do
     chunks =
       case chunks do
         [] when range_start == 0 ->
-          [{range_end, blob}]
+          [{{0, range_end}, blob}]
 
-        chunks = [{prev_end, _blob} | _tail = []] when prev_end + 1 == range_start ->
-          [{range_end, blob} | chunks]
+        chunks = [{{_prev_start, prev_end}, _blob} | _tail = []] when prev_end + 1 == range_start ->
+          [{{range_start, range_end}, blob} | chunks]
 
-        chunks = [{prev_end, blob} | _tail] when prev_end + 1 == range_start ->
-          [{range_end, blob} | chunks]
+        chunks = [{{_prev_start, prev_end}, blob} | _tail] when prev_end + 1 == range_start ->
+          [{{range_start, range_end}, blob} | chunks]
 
         _ ->
           Logger.warn("Got invalid chunk sequence for range '#{range_start}-#{range_end}'")
@@ -103,7 +137,7 @@ defmodule Muster.Repository.Impl do
           end
 
         {:started, chunks} = Map.fetch!(state.uploads, upload_id)
-        layers = put_layer(digest, chunks, state.layers)
+        layers = put_layer(digest, chunks, state.layers, state.name)
         uploads = Map.put(state.uploads, upload_id, {:completed, []})
         {:ok, digest, %{state | layers: layers, uploads: uploads}}
 
@@ -112,13 +146,20 @@ defmodule Muster.Repository.Impl do
     end
   end
 
-  defp put_layer(digest, chunks, layers_state) do
+  defp put_layer(digest, chunks, layers_state, name) when is_list(chunks) do
     layer =
       chunks
       |> Enum.map(fn {_, blob} -> blob end)
       |> Enum.reduce(<<>>, fn a, b -> a <> b end)
 
-    Map.put(layers_state, digest, layer)
+    put_layer(digest, layer, layers_state, name)
+  end
+
+  defp put_layer(digest, blob, layers_state, name) when is_binary(blob) do
+    case Storage.write_blob(@namespace, name, digest, blob) do
+      :ok -> MapSet.put(layers_state, digest)
+      {:error, _} -> layers_state
+    end
   end
 
   def upload_manifest(
@@ -129,7 +170,7 @@ defmodule Muster.Repository.Impl do
       ) do
     case manifest_layers
          |> Enum.map(fn %{"digest" => digest} -> digest end)
-         |> Enum.all?(&Map.has_key?(state.layers, &1)) do
+         |> Enum.all?(&MapSet.member?(state.layers, &1)) do
       true ->
         state = state |> put_manifest(reference, manifest_digest, manifest)
         {:ok, {reference, state}}
@@ -143,5 +184,18 @@ defmodule Muster.Repository.Impl do
     tags = Map.put(state.tags, reference, manifest)
     manifests = Map.put(state.manifests, digest, reference) |> Map.put(reference, reference)
     %{state | tags: tags, manifests: manifests}
+  end
+
+  def check_layer(digest, %__MODULE__{layers: layers}  = _state) do
+    MapSet.member?(layers, digest)
+  end
+
+  def get_layer(digest, %__MODULE__{layers: layers}  = state) do
+    l = layers |> Enum.map(fn l -> l["digest"] end) |> Enum.join(", ")
+    Logger.info("Checking layer #{digest} in layers for #{l}")
+    case MapSet.member?(layers, digest) do
+      false -> {:error, :not_found}
+      true -> Storage.get_blob(@namespace, state.name, digest)
+    end
   end
 end
