@@ -5,7 +5,7 @@ defmodule MusterApi.RegistryView do
     body
   end
 
-   def render("tags.json", %{name: name, tags: tags}) when is_binary(name) and is_list(tags) do
+  def render("tags.json", %{name: name, tags: tags}) when is_binary(name) and is_list(tags) do
     %{
       "name" => name,
       "tags" => tags

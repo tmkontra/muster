@@ -51,28 +51,6 @@ defmodule MusterApi do
     end
   end
 
-  def service do
-    quote do
-      def create_repo(repo) do
-        # TODO: get repo state from db
-        Muster.Registry.start_repo(repo)
-      end
-
-      defmacro with_repo(repo, do: expression) do
-        quote do
-          func = fn -> unquote(expression) end
-          try do
-            func.()
-          catch
-            :exit, {:noproc, _} ->
-              create_repo(unquote(repo))
-              func.()
-          end
-        end
-      end
-    end
-  end
-
   # def channel do
   #   quote do
   #     use Phoenix.Channel

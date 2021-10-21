@@ -1,5 +1,4 @@
 defmodule MusterApi.Plug.DigestPlug do
-
   def read_body(conn, opts) do
     {:ok, body, conn} = Plug.Conn.read_body(conn, opts)
     digests = digest_content(body)
@@ -10,7 +9,6 @@ defmodule MusterApi.Plug.DigestPlug do
   def digest_content(body) do
     :crypto.hash(:sha256, body)
     |> Base.encode16(case: :lower)
-    |> fn d -> "sha256:" <> d end.()
+    |> (fn d -> "sha256:" <> d end).()
   end
-
 end

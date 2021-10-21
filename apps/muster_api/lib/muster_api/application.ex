@@ -10,7 +10,7 @@ defmodule MusterApi.Application do
       # Start the Telemetry supervisor
       MusterApi.Telemetry,
       # Start the Endpoint (http/https)
-      MusterApi.Endpoint,
+      MusterApi.Endpoint
       # Start a worker by calling: MusterApi.Worker.start_link(arg)
       # {MusterApi.Worker, arg}
     ]

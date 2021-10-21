@@ -10,10 +10,12 @@ defmodule MusterApi.RegistryControllerTest do
     namespace = random_string(16)
     name = random_string(22)
     conn = get(conn, "/v2/#{namespace}/#{name}/")
+
     %{
       "namespace" => namespace_resp,
-      "repo" => name_resp,
+      "repo" => name_resp
     } = json_response(conn, 200)
+
     assert namespace_resp == namespace
     assert name_resp = name
   end
