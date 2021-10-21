@@ -26,8 +26,8 @@ defmodule MusterApi.Router do
       patch "/blobs/uploads/:location", RegistryController, :upload_blob_chunk
       put "/manifests/:reference", RegistryController, :upload_manifest
 
-      get "/blobs/:digest", RegistryController, :get_blob
       head "/blobs/:digest", RegistryController, :blob_exists?
+      get "/blobs/:digest", RegistryController, :get_blob
 
       head "/manifests/:reference", RegistryController, :manifest_exists?
       get "/manifests/:reference", RegistryController, :get_manifest

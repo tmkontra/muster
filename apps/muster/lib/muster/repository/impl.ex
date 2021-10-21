@@ -5,8 +5,11 @@ defmodule Muster.Repository.Impl do
   @enforce_keys [:name, :uploads, :layers, :tags, :manifests]
   defstruct ~w[name uploads layers tags manifests]a
 
+  @type t :: %__MODULE__{name: String.t(), uploads: map(), layers: MapSet.t(), tags: map(), manifests: map()}
+
   @namespace "all"
 
+  @spec new(any) :: Muster.Repository.Impl.t()
   def new(name) do
     %__MODULE__{
       name: name,
@@ -70,17 +73,45 @@ defmodule Muster.Repository.Impl do
     end
   end
 
+  def upload_layer_stream(
+    upload_id, blob, %__MODULE__{uploads: uploads} = state
+  ) do
+    Logger.debug("Streaming layer chunk for #{upload_id}")
+    with {:ok, {:started, chunks}} when is_list(chunks) <- Map.fetch(uploads, upload_id)
+         do
+          range_end = case chunks do
+            [prev | []] ->
+              {{_, prev_end}, _} = prev
+              prev_end
+            [prev | [_]] ->
+              {{_, prev_end}, _} = prev
+              prev_end
+            [] ->
+              0
+          end
+          range = range_end + byte_size(blob)
+          chunks = [{{nil, range}, blob} | chunks]
+          uploads = Map.put(uploads, upload_id, {:started, chunks})
+          state = %{state | uploads: uploads}
+          {:ok, range, state}
+    else
+      {:ok, {:started, nil}} -> {:error, :monolithic_only}
+      {:error, cause} -> {:error, cause}
+      error -> {:error, error}
+    end
+  end
+
   defp verify_chunk_order(chunks, range_start, range_end, blob) do
     chunks =
       case chunks do
         [] when range_start == 0 ->
-          [{range_end, blob}]
+          [{{0, range_end}, blob}]
 
-        chunks = [{prev_end, _blob} | _tail = []] when prev_end + 1 == range_start ->
-          [{range_end, blob} | chunks]
+        chunks = [{{_prev_start, prev_end}, _blob} | _tail = []] when prev_end + 1 == range_start ->
+          [{{range_start, range_end}, blob} | chunks]
 
-        chunks = [{prev_end, blob} | _tail] when prev_end + 1 == range_start ->
-          [{range_end, blob} | chunks]
+        chunks = [{{_prev_start, prev_end}, blob} | _tail] when prev_end + 1 == range_start ->
+          [{{range_start, range_end}, blob} | chunks]
 
         _ ->
           Logger.warn("Got invalid chunk sequence for range '#{range_start}-#{range_end}'")
@@ -160,6 +191,8 @@ defmodule Muster.Repository.Impl do
   end
 
   def get_layer(digest, %__MODULE__{layers: layers}  = state) do
+    l = layers |> Enum.map(fn l -> l["digest"] end) |> Enum.join(", ")
+    Logger.info("Checking layer #{digest} in layers for #{l}")
     case MapSet.member?(layers, digest) do
       false -> {:error, :not_found}
       true -> Storage.get_blob(@namespace, state.name, digest)

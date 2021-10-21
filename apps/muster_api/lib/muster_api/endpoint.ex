@@ -49,7 +49,7 @@ defmodule MusterApi.Endpoint do
     body_reader: {DigestPlug, :read_body, []}
 
   plug Plug.MethodOverride
-  plug Plug.Head
+  # plug Plug.Head
   plug Plug.Session, @session_options
   plug MusterApi.Router
 end

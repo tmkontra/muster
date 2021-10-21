@@ -1,5 +1,6 @@
 defmodule MusterApi.RegistryController do
   use MusterApi, :controller
+  require Logger
 
   def render_json(conn, body), do: render(conn, "index.json", body: body)
 
@@ -28,14 +29,15 @@ defmodule MusterApi.RegistryController do
       end
 
     case MusterApi.RegistryService.start_upload(namespace, name, type) do
-      %{location: location} = resp ->
+      %{location: location_id} ->
         location =
-          MusterApi.Router.Helpers.registry_path(conn, :upload_blob, namespace, name, location)
-
+          MusterApi.Router.Helpers.registry_path(conn, :upload_blob, namespace, name, location_id)
+        Logger.info("Sending location for new upload: #{location}")
         conn
-        |> put_status(202)
         |> put_resp_header("Location", location)
-        |> render_json(%{"type" => type})
+        |> put_resp_header("Range", "bytes=0-0")
+        |> put_resp_header("Docker-Upload-UUID", location_id)
+        |> send_resp(202, "")
     end
   end
 
@@ -57,20 +59,25 @@ defmodule MusterApi.RegistryController do
     end
   end
 
+  defp range_from_headers(conn, blob) do
+    case Plug.Conn.get_req_header(conn, "content-range") do
+      [range] ->
+        Logger.info("Got range from headers: #{range}")
+        [range_start, range_end] = String.split(range, "-")
+          |> Enum.map(fn i -> Integer.parse(i) end)
+          |> Enum.map(fn {i, _} -> i end)
+        {range_start, range_end}
+      _ -> nil
+    end
+  end
+
   def upload_final_blob_chunk(
         conn,
         %{"namespace" => namespace, "name" => name, "location" => location, "digest" => digest} =
           _params
       ) do
     {:ok, blob, conn} = Plug.Conn.read_body(conn)
-    [range] = Plug.Conn.get_req_header(conn, "content-range")
-
-    [range_start | range_end] =
-      String.split(range, "-")
-      |> Enum.map(fn i -> Integer.parse(i) end)
-      |> Enum.map(fn {i, _} -> i end)
-
-    range = {range_start, range_end}
+    range = range_from_headers(conn, blob)
 
     case MusterApi.RegistryService.upload_final_blob_chunk(
            namespace,
@@ -89,28 +96,28 @@ defmodule MusterApi.RegistryController do
         %{"namespace" => namespace, "name" => name, "location" => location} = _params
       ) do
     {:ok, blob, conn} = Plug.Conn.read_body(conn)
-    [range] = Plug.Conn.get_req_header(conn, "content-range")
-
-    [range_start | range_end] =
-      String.split(range, "-")
-      |> Enum.map(fn i -> Integer.parse(i) end)
-      |> Enum.map(fn {i, _} -> i end)
-
-    range = {range_start, range_end}
-
+    range = range_from_headers(conn, blob)
+    # when range is nil , upload blob chunk routes to stream upload
     case MusterApi.RegistryService.upload_blob_chunk(namespace, name, location, range, blob) do
       {:error, :illegal_chunk_sequence} ->
         conn
         |> send_resp(416, "")
-
-      %{location: _blob_location} ->
+      %{location: location_id, range: range} ->
         location =
           MusterApi.Router.Helpers.registry_path(conn, :upload_blob, namespace, name, location)
-
         conn
         |> put_resp_header("Location", location)
+        |> put_resp_header("Docker-Upload-UUID", location_id)
+        |> put_resp_header("Range", "0-#{range |> to_string}")
+        # |> log_response()
         |> send_resp(202, "")
     end
+  end
+
+  defp log_response(conn) do
+    r = conn |> to_string()
+    Logger.debug("Response: #{r}")
+    conn
   end
 
   def upload_manifest(
@@ -129,7 +136,8 @@ defmodule MusterApi.RegistryController do
         |> put_resp_header("Manifest-Digest", digests)
         |> send_resp(201, "")
 
-      _ ->
+      error ->
+        Logger.error("Unable to upload manifest: #{error}")
         conn |> send_resp(400, "")
     end
   end
@@ -145,9 +153,10 @@ defmodule MusterApi.RegistryController do
         conn,
         %{"namespace" => namespace, "name" => name, "digest" => digest} = _params
       ) do
+    Logger.debug("Checking blob exists? #{digest}")
     case MusterApi.RegistryService.blob_exists?(namespace, name, digest) do
-      false -> conn |> not_found
-      true -> conn |> render_json(%{})
+      false -> conn |> not_found()
+      true -> conn |> send_resp(200, "")
     end
   end
 
