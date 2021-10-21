@@ -12,7 +12,7 @@ import Config
 
 # Configures the muster core
 config :muster,
-  speed_limit: 5
+  key: "value"
 
 config :muster_api,
   generators: [context_app: false]

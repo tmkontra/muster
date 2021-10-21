@@ -1,8 +1,11 @@
 defmodule Muster.Repository.Impl do
+  alias Muster.Storage
   require Logger
 
   @enforce_keys [:name, :uploads, :layers, :tags, :manifests]
   defstruct ~w[name uploads layers tags manifests]a
+
+  @namespace "all"
 
   def new(name) do
     %__MODULE__{
@@ -10,10 +13,10 @@ defmodule Muster.Repository.Impl do
       # upload sessions
       uploads: %{},
       # digest to layer blob
-      layers: %{},
+      layers: MapSet.new(),
       # tag to manifest
       tags: %{},
-      # digest to tag, tag to tag -- single source of truth for manifest reference -> tag
+      # digest -> tag (union) tag -> tag -- single source of truth for manifest reference -> tag
       manifests: %{}
     }
   end
@@ -38,7 +41,7 @@ defmodule Muster.Repository.Impl do
         %__MODULE__{uploads: uploads, layers: layers} = state
       ) do
     with {:ok, {:started, _any}} <- Map.fetch(uploads, upload_id) do
-      layers = Map.put(layers, digest, blob)
+      put_layer(digest, blob, layers, state.name)
       uploads = Map.put(uploads, upload_id, {:completed, []})
       state = %{state | layers: layers, uploads: uploads}
       {:ok, digest, state}
@@ -103,7 +106,7 @@ defmodule Muster.Repository.Impl do
           end
 
         {:started, chunks} = Map.fetch!(state.uploads, upload_id)
-        layers = put_layer(digest, chunks, state.layers)
+        layers = put_layer(digest, chunks, state.layers, state.name)
         uploads = Map.put(state.uploads, upload_id, {:completed, []})
         {:ok, digest, %{state | layers: layers, uploads: uploads}}
 
@@ -112,13 +115,20 @@ defmodule Muster.Repository.Impl do
     end
   end
 
-  defp put_layer(digest, chunks, layers_state) do
+  defp put_layer(digest, chunks, layers_state, name) when is_list(chunks) do
     layer =
       chunks
       |> Enum.map(fn {_, blob} -> blob end)
       |> Enum.reduce(<<>>, fn a, b -> a <> b end)
 
-    Map.put(layers_state, digest, layer)
+    put_layer(digest, layer, layers_state, name)
+  end
+
+  defp put_layer(digest, blob, layers_state, name) when is_binary(blob) do
+    case Storage.write_blob(@namespace, name, digest, blob) do
+      :ok -> MapSet.put(layers_state, digest)
+      {:error, _} -> layers_state
+    end
   end
 
   def upload_manifest(
@@ -129,7 +139,7 @@ defmodule Muster.Repository.Impl do
       ) do
     case manifest_layers
          |> Enum.map(fn %{"digest" => digest} -> digest end)
-         |> Enum.all?(&Map.has_key?(state.layers, &1)) do
+         |> Enum.all?(&MapSet.member?(state.layers, &1)) do
       true ->
         state = state |> put_manifest(reference, manifest_digest, manifest)
         {:ok, {reference, state}}
@@ -143,5 +153,16 @@ defmodule Muster.Repository.Impl do
     tags = Map.put(state.tags, reference, manifest)
     manifests = Map.put(state.manifests, digest, reference) |> Map.put(reference, reference)
     %{state | tags: tags, manifests: manifests}
+  end
+
+  def check_layer(digest, %__MODULE__{layers: layers}  = _state) do
+    MapSet.member?(layers, digest)
+  end
+
+  def get_layer(digest, %__MODULE__{layers: layers}  = state) do
+    case MapSet.member?(layers, digest) do
+      false -> {:error, :not_found}
+      true -> Storage.get_blob(@namespace, state.name, digest)
+    end
   end
 end

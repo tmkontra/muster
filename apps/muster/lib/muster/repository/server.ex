@@ -15,7 +15,7 @@ defmodule Muster.Repository.Server do
   @spec init(any) ::
           {:ok,
            %Muster.Repository.Impl{
-             layers: %{},
+             layers: MapSet.t(any),
              manifests: %{},
              name: any,
              tags: %{},
@@ -178,19 +178,14 @@ defmodule Muster.Repository.Server do
   end
 
   @impl GenServer
-  def handle_call({:check_layer, digest}, _from, %{layers: layers} = state) do
-    exists? = Map.has_key?(layers, digest)
+  def handle_call({:check_layer, digest}, _from, state) do
+    exists? = Repository.Impl.check_layer(digest, state)
     {:reply, exists?, state}
   end
 
   @impl GenServer
-  def handle_call({:get_layer, digest}, _from, %{layers: layers} = state) do
-    resp =
-      case Map.get(layers, digest) do
-        nil -> {:error, :not_found}
-        blob -> {:ok, blob}
-      end
-
+  def handle_call({:get_layer, digest}, _from, state) do
+    resp = Repository.Impl.get_layer(digest, state)
     {:reply, resp, state}
   end
 end
